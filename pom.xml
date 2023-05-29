@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.vmc</groupId>
-	<artifactId>Utility</artifactId>
+	<artifactId>LogicalPrograms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Utility</name>
+	<name>LogicalPrograms</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>

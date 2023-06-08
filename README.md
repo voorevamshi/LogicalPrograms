@@ -1,3 +1,4 @@
+<pre style="word-wrap: break-word;word-space:pre-wrap">
 # Below are the Logical programs to write in different ways
 1)second highest element of array
 2)0,1,2array sor

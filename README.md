@@ -1,7 +1,7 @@
 <pre style="word-wrap: break-word;word-space:pre-wrap">
 # Below are the Logical programs to write in different ways
 1)second highest element of array
-2)0,1,2array sor
+2)0,1,2array sorting
 3)check given number is converging or not
 4)given number is Armstrong or not
 5)sorting array with single for loop

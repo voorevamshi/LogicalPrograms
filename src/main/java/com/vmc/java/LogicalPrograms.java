@@ -2,37 +2,30 @@ package com.vmc.java;
 
 public class LogicalPrograms {
 	public static void main(String[] args) {
-		int[] input = { 2, 9, 99, 88, 233, 12, 0 };
-		printInput(input);
-		//1)second highest element of array
-		int value = returnSecondHighest(input);
-		printOutput(input);
-		System.out.println("\nSecondHighest Number:\t" + value);
+		LogicalPrograms logicalPrograms=new LogicalPrograms();
+		logicalPrograms.executeLogic("com.vmc.java.SecondHighestNumber");
+		logicalPrograms.executeLogic("com.vmc.java.Palindrome");
 	}
 
-	private static void printInput(int[] input) {
-		System.out.print("Input:\t");
-		for (int i = 0; i < input.length; i++) {
-			System.out.print(input[i] + "\t");
-		}
+	private void executeLogic(String string) {
+		
+		 try {
+	            Class<?> cls = Class.forName(string);
+	            // Using the new way since newInstance() is deprecated from Java 9 onwards
+	            Object obj = cls.getDeclaredConstructor().newInstance();
+
+	            // Now, if you're sure about the type, you can cast and call its methods
+	            if (obj instanceof Logic) {
+	            		((Logic) obj).execute();
+	            		((Logic) obj).executeWithSoultion2();
+	            		((Logic) obj).executeWithSoultion3();
+	            		((Logic) obj).executeUsingJava8();
+	            }
+
+	        } catch (Exception e) {
+	            System.out.println(e);
+	        }
 	}
-	private static void printOutput(int[] input) {
-		System.out.println();
-		System.out.print("Output:\t");
-		for (int i = 0; i < input.length; i++) {
-			System.out.print(input[i] + "\t");
-		}
-	}
-	private static int returnSecondHighest(int[] input) {
-		for (int i = 0; i < input.length; i++) {
-			for (int j = 0; j < input.length; j++) {
-				if (input[i] < input[j]) {
-					int temp = input[i];
-					input[i] = input[j];
-					input[j] = temp;
-				}
-			}
-		}
-		return input[1];
-	}
+
+	
 }

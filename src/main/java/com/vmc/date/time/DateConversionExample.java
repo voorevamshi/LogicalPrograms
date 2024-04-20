@@ -1,4 +1,4 @@
-package com.vmc.java8.date.time;
+package com.vmc.date.time;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

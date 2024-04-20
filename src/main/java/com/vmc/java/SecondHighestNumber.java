@@ -2,9 +2,11 @@ package com.vmc.java;
 
 public class SecondHighestNumber implements Logic{
 
+	int[] input = { 2, 9, 99, 88, 233, 12, 0 };
+	
 	@Override
 	public void execute() {
-		int[] input = { 2, 9, 99, 88, 233, 12, 0 };
+		
 		Utility.printInput(input);
 		int value = returnSecondHighest(input);
 		Utility.printOutput(input);

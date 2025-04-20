@@ -7,11 +7,11 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class CopyFlesToAnotherFolder {
-public static void main(String[] args) {
+    public static void main(String[] args) {
         // Source and destination folder paths
         String sourceFolder = "F:\\AJAY PHOTOS\\GROOM";
         String destinationFolder = "D:\\Selected\\Day_1";
-        String fileListPath = "Day1.txt";
+        String fileListPath = "files\\Day1.txt";
 
         // Copy files listed in filelist.txt from source to destination folder
         try {
@@ -41,4 +41,5 @@ public static void main(String[] args) {
             Files.copy(sourceFile, destinationFile);
             System.out.println("Copied: " + sourceFile + " to " + destinationFile);
         }
-    }}
+    }
+}

@@ -1,74 +1,89 @@
 package com.vmc.java;
 
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 public class ArmstrongNumberChecker implements Logic {
 
-	String input = "153";
+    private final String input = "153";
 
-	void init(boolean condition) {
-		// Define the ifElse consumer in a single line
-		Consumer<String> ifElse = input -> System.out
-				.println(condition ? input + " is an Armstrong number." : input + " is not an Armstrong number.");
-		// Use the ifElse consumer
-		ifElse.accept(input);
-	}
+    @Override
+    public void execute() {
+        System.out.println("Solution1 input: " + input);
+        printResult(isArmstrongSolution1(input));
+    }
 
-	@Override
-	public void execute() {
-		System.out.println("ArmstrongNumberChecker Soluton1 input:" + input);
-		init(isArmstrongSoultion1(input));
-	}
+    private boolean isArmstrongSolution1(String input) {
+        if (input == null || !input.matches("\\d+")) {
+            System.out.println("Invalid input: " + input);
+            return false;
+        }
+        int sum = 0;
+        List<Integer> digits = input.chars().mapToObj(c -> c - '0').toList();
+        for (int num : digits) {
+            sum += Math.pow(num, digits.size());
+        }
+        return Integer.parseInt(input) == sum;
+    }
 
-	private boolean isArmstrongSoultion1(String input) {
-		int result = 0;
-		List<Integer> intList = input.chars().mapToObj(c -> ((int) c) - 48).collect(Collectors.toList());
-		for (int i = 0; i < intList.size(); i++) {
-			result += Math.pow(intList.get(i), intList.size());
-		}
-		return (Integer.parseInt(input) == result);
-	}
+    @Override
+    public void executeWithSoultion2() {
+        System.out.println("Solution2 input: " + input);
+        printResult(isArmstrongSolution2(input));
+    }
 
-	@Override
-	public void executeWithSoultion2() {
-		System.out.println("ArmstrongNumberChecker Soluton2 input:" + input);
-		init(isArmstrongSoultion2(input));
-	}
+    public static boolean isArmstrongSolution2(String input) {
+        try {
+            int number = Integer.parseInt(input), sum = 0, length = input.length();
+            while (number > 0) {
+                int digit = number % 10;
+                sum += (int) Math.pow(digit, length);
+                number /= 10;
+            }
+            return sum == Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input: " + input);
+            return false;
+        }
+    }
 
-	public static boolean isArmstrongSoultion2(String input) {
-		int originalNumber = Integer.parseInt(input);
-		int result = 0;
-		int length = input.length();
+    @Override
+    public void executeWithSoultion3() {
+        System.out.println("Solution3 input: " + input);
+        printResult(isArmstrongSolution3(input));
+    }
 
-		while (originalNumber != 0) {
-			int remainder = originalNumber % 10;
-			result += Math.pow(remainder, length);
-			originalNumber /= 10;
-		}
+    private boolean isArmstrongSolution3(String input) {
+        if (input == null || !input.matches("//d+")) {
+            System.out.println("Invalid input: " + input);
+            return false;
+        }
+        int sum = 0, power = input.length();
+        for (char digit : input.toCharArray()) {
+            sum += (int) Math.pow(digit - '0', power);
+        }
 
-		return (Integer.parseInt(input) == result);
-	}
+        return Integer.parseInt(input) == sum;
+    }
 
-	@Override
-	public void executeWithSoultion3() {
-		System.out.println("ArmstrongNumberChecker Soluton3 input:" + input);
-		init(isArmstrongSoultion3(input));
-	}
+    @Override
+    public void executeUsingJava8() {
+        System.out.println("Using Java 8 input: " + input);
+        printResult(isArmstrongUsingJava8(input));
+    }
 
-	private boolean isArmstrongSoultion3(String number) {
-		char[] intList = number.toCharArray();
-		int result = 0;
-		for (int i = 0; i < intList.length; i++) {
-			result += Math.pow(intList[i] - 48, intList.length);
-		}
-		return (Integer.parseInt(number) == result);
-	}
+    private boolean isArmstrongUsingJava8(String input) {
+        if (input == null || !input.chars().allMatch(Character::isDigit)) {
+            System.out.println("Invalid input: " + input);
+            return false;
+        }
+        int sum = input.chars()
+                .map(c -> (int) Math.pow(c - '0', input.length()))
+                .sum();
+        return Integer.parseInt(input) == sum;
+    }
 
-	@Override
-	public void executeUsingJava8() {
-
-	}
-
+    private void printResult(boolean isArmstrong) {
+        System.out.println(input + (isArmstrong ? " is an Armstrong number." : " is not an Armstrong number."));
+    }
 }

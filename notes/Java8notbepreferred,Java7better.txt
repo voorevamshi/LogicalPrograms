@@ -1,0 +1,26 @@
+Simple Iterative Logic:  
+When the logic involves straightforward loops or conditions, such as iterating over an array or list to perform simple operations.
+Example: Calculating the sum of elements in an array.
+
+Mutability Requirements:  
+When variables need to be modified within a loop or block of code, and using Java 8 streams or lambdas would require workarounds like AtomicInteger or arrays.
+Example: Accumulating a value or modifying a counter.
+java.util.concurrent.atomic package provides atomic classes for thread-safe operations on single variables
+AtomicInteger,AtomicLong,AtomicBoolean 
+AtomicDouble in the com.google.common.util.concurrent package.
+
+Performance-Critical Applications:  
+When performance is a priority, and the overhead of creating streams or lambda expressions is unnecessary.
+Example: Processing large datasets where traditional loops are faster.
+
+Debugging and Readability:  
+When debugging is critical, and the stack trace or flow of execution is easier to follow in traditional loops compared to streams.
+Example: Complex nested operations where streams might obscure the logic.
+
+Limited Java 8 Features:  
+When the use of Java 8 features like streams or lambdas does not add significant value or makes the code harder to understand.
+Example: Simple filtering or mapping operations that can be done with a for loop.
+
+Avoiding Overhead for Small Data:  
+When working with small datasets where the benefits of streams (e.g., parallel processing) are negligible.
+Example: Iterating over a small list of items.

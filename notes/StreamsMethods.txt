@@ -1,0 +1,34 @@
+List<Integer> intList = input.chars().mapToObj(c -> c - '0').toList();
+
+input.chars(): This method converts the input string into an IntStream, 
+where each element in the stream represents the Unicode value of a character in the string. 
+For example, if input is "153", the stream will contain the values [49, 53, 51] (the Unicode values of '1', '5', and '3').  
+
+.mapToObj(c -> c - '0'):
+The mapToObj function is used to transform each Unicode value in the stream into its corresponding integer representation. 
+The expression c - '0' works because the Unicode value of '0' is subtracted from the Unicode value of the character c, effectively converting the character to its numeric value. 
+For example, '1' - '0' results in 1, '5' - '0' results in 5, and so on.
+  
+The Stream class in Java provides several methods like 
+Stream<T>    mapToObj:    Converts each element of the stream into an object of a different type.Ex: IntStream.of(1, 2, 3).mapToObj(i -> "Number: " + i);
+IntStream    mapToInt:    Converts each element of the stream into an int value.Ex: Stream.of("1", "2", "3").mapToObj(i -> "Number: " + i);
+LongStream   mapToLong:   Converts each element of the stream into a long value.Ex: Stream.of("10000000000", "20000000000").mapToLong(Long::parseLong); 
+DoubleStream mapToDouble: Converts each element of the stream into a double value.Ex: Stream.of("1.5", "2.5", "3.5").mapToDouble(Double::parseDouble);
+to transform elements in a stream into different types of streams. 
+
+
+.toList(): Finally, the toList() method collects the transformed stream elements into a List<Integer>. This results in a list of integers representing the digits in the input string. For example, if input is "153", the resulting intList will be [1, 5, 3]. 
+
+The Stream class in Java provides several collect methods
+List<S> 		toList()		:Collects the elements of the stream into a List. 									Ex: Stream.of("A", "B", "C").collect(Collectors.toList());
+Set<S>  		toSet() 		:Collects the elements of the stream into a Set (removes duplicates). 				Ex:Stream.of("A", "B", "A").collect(Collectors.toSet());
+Map<I, S>		toMap()			:Collects the elements of the stream into a Map using key and value mapping fun.    Ex: Stream.of("A", "BB", "CCC").toMap(String::length, s -> s)
+String 			joining() 		:Concatenates the elements of the stream into a single String.						Ex:Stream.of("A", "B", "C").collect(Collectors.joining(", "));
+Map<I, List<S>>	groupingBy()	:Groups the elements by a classifier returns a Map.keys are the classifier results. Ex: Stream.of("A", "BB", "CCC").groupingBy(String::length)
+Map<B, List<I>> partitioningBy():Partitions the elements of the stream into two groups based on a predicate.		Ex:Stream.of(1, 2, 3, 4).partitioningBy(n -> n % 2 == 0)
+long			counting()		:Counts the number of elements in the stream.										Ex: Stream.of("A", "B", "C").counting();
+int				reducing()		:Performs a reduction operation on the elements of the stream.						Ex: Stream.of(1, 2, 3).reducing(0, Integer::sum);
+List<I>			mapping()		:Applies a mapping function to the elements before collecting them					Ex:Stream.of("A", "BB", "CCC").mapping(String::length, toList())
+IntSummaryStatistics	summarizingInt()	:Collects statistics (count, sum, min, average, max) for numeric streams.Ex:Stream.of(1, 2, 3).summarizingInt(Integer::intValue).getSum()
+DoubleSummaryStatistics summarizingDouble() :Ex:Stream.of(1.5, 2.5, 3.5) .collect(Collectors.summarizingDouble(Double::doubleValue)).getAverage()
+LongSummaryStatistics   summarizingLong() 	:Ex:Stream.of(10000000000, 20000000000).collect(Collectors.summarizingDouble(Long::longValue)).getMax()

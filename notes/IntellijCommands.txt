@@ -1,0 +1,18 @@
+Ctrl+Shift+R(Search File)------------>Ctrl+Shift+N
+Alt+Shift+R(Replace variableName)---->Shift+F6
+Ctrl+H(Search text)------------------>Ctrl+Shift+F
+Ctrl+Shift+W(close all tabs)--------->Ctrl+Shift+F4.(Not working)
+Ctrl+Shift+O(Organize Imports)------->Ctrl+Alt+O 	
+Alt+Enter(Check file location)------->Alt+F1 and Show in Explorer
+Ctrl+Shift+F(formate code)----------->Ctrl+Alt+L
+Ctrl+K(find all usages)-------------->Ctrl+F7
+
+Intellij commands
+Shift+F10-------> run the program
+Alt+Enter-------> Intellij suggests fixing it
+Shift+F9--------> Start debuging
+
+Debug
+F6------->F8
+F5------->F7
+F8------->Shift+F8

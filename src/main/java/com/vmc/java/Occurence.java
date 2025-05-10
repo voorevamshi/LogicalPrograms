@@ -11,7 +11,7 @@ public class Occurence implements Logic {
 
 	@Override
 	public void execute() {
-		System.out.println("====== execute() input:" + input);
+		System.out.println("execute() input:" + input);
 		findOccurences(input);
 	}
 
@@ -23,13 +23,12 @@ public class Occurence implements Logic {
 					count++;
 				}
 			}
-			System.out.println(input.charAt(j) + " Occurences count is " + count);
 		}
 	}
 
 	@Override
 	public void executeWithSoultion2() {
-		System.out.println("====== executeWithSoultion2 input:" + input);
+		System.out.println("executeWithSoultion2 input:" + input);
 		findOccurencesSoultion2(input);
 	}
 
@@ -48,7 +47,7 @@ public class Occurence implements Logic {
 
 	@Override
 	public void executeWithSoultion3() {
-		System.out.println("====== executeWithSoultion3 input:" + input);
+		System.out.println("executeWithSoultion3 input:" + input);
 		findOccurencesSoultion3(input);
 	}
 
@@ -62,7 +61,7 @@ public class Occurence implements Logic {
 
 	@Override
 	public void executeUsingJava8() {
-		System.out.println("====== executeUsingJava8 input:" + input);
+		System.out.println("executeUsingJava8 input:" + input);
 		findOccurencesUsingJava8(input);
 	}
 

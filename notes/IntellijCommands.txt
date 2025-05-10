@@ -6,6 +6,7 @@ Ctrl+Shift+O(Organize Imports)------->Ctrl+Alt+O
 Alt+Enter(Check file location)------->Alt+F1 and Show in Explorer
 Ctrl+Shift+F(formate code)----------->Ctrl+Alt+L
 Ctrl+K(find all usages)-------------->Ctrl+F7
+Ctrl+O(open hiraricy)---------------->Alt =7
 
 Intellij commands
 Shift+F10-------> run the program

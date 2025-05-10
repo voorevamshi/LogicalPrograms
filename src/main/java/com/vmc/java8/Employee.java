@@ -3,7 +3,7 @@ package com.vmc.java8;
 import java.util.Date;
 import java.util.List;
 
-public class Employee {
+public class Employee implements  Comparable {
 	private Integer id;
 	private String name;
 	private Double salary;
@@ -20,11 +20,23 @@ public class Employee {
 		this.gender = gender;
 		this.joinDate = joinDate;
 	}
-	@Override
+/*	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", name=" + name + ", salary=" + salary + ", gender=" + gender + ", joinDate="
 				+ joinDate + ", department=" + department + ", skills=" + skills + "]";
+	}*/
+
+	@Override
+	public String toString() {
+		return "Employee{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", salary=" + salary +
+				", gender=" + gender +
+				", joinDate=" + joinDate +
+				'}';
 	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -67,8 +79,23 @@ public class Employee {
 	public void setSkills(List<Skill> skills) {
 		this.skills = skills;
 	}
-	
-	
-	
-	
+
+
+	@Override
+	public int compareTo(Object o) {
+	    if (o == null || !(o instanceof Employee)) {
+	        throw new IllegalArgumentException("Invalid object for comparison");
+	    }
+	    Employee other = (Employee) o;
+	    if (this.name == null && other.name == null) {
+	        return 0; // Both names are null, considered equal
+	    }
+	    if (this.name == null) {
+	        return -1; // Null names are considered smaller
+	    }
+	    if (other.name == null) {
+	        return 1; // Non-null names are considered larger
+	    }
+	    return this.name.compareTo(other.name); // Compare names lexicographically
+	}
 }

@@ -1,0 +1,228 @@
+--------Why Saga
+We know design pattern gives solution to common problems faced by the developers so what problem is solved by this SAGA design pattern
+The problem started as soon as we moved from Monolithic application to Microservice architecture
+We will take example of Swiggi,zomoto
+
+Choose your dishes
+add them to cart and checkout
+make payment
+order gets deliveredour order is marked as completed after delivery succesful.
+
+In monolithic its not a problem as we have 1 database multiple tables like orders, payments, delivery, ect...
+Now in 1 single atomic transaction we can do all these steps and if payment fails everything gets rollback
+--------
+In monolithic architecture below are in table in single datbase single transaction because it is in automic nature.
+t1-->order
+t2-->payment
+t3-->delivery
+t4-->make success order
+----------------Why SAGA 2
+Now we move to microservices architecture and segerated the whole zomoto swiggi application to
+Order service
+Payment service
+Delivery service
+
+Now your order service accepts your order, 
+payment service validates the payment done and 
+delivery service is responisible for delivery of your order to your home
+when delivery succesfully the orders is the order is marked as completed in the happy case.
+
+Ever thought about the wors case Delivery is failed as no delivery partner was aviailable . Your payment was done,
+money got deducted and now No Food. At least we need to get the money back and order must be cancelled.
+
+For this to happen we need a transaction rollback. Transaction did get rollback but only the scope of transaction was in delivery service. 
+The boundary for this stransaction ended in delivery service.
+
+Now what about order service and paymeent service// Neither your money is returned with this rollback not you order status changed from waiting to failed/Cancelled.
+Such a bad user experiance right?
+This is the classic example where your application completly failed to manage distributed transaction(A transaction what spans across multiple microservices)
+Now This is a problem and to handle such distributed transactions issues SAGA design pattern canme to picture.
+--------
+when we move to micro- service architecture you segerigate whole application multiple differernt applications
+order service will handle all your orders
+payment service will handle validate payments
+delivery service will handle deliveries at doorstep
+
+Happy case goes like this
+Order service It accepts your order.It creates order and updates the order
+next event is trigger
+payment screen on your app. and  it- asks your payment. validate payment and payment is done.
+next event/transaction goes to delivery service
+Delivery is scheduled and delvery partner is assigned to you and delivery is done at your dore step.
+when delivery partner mark order as successful
+
+
+Let's negitive case
+what if when delivery is failed and no partner is not assigned to you.
+your payment is done and your money is deducted but no food.
+Customer call customer and should expect that your payment should be reverted and order should marked as failed
+
+In monolithic transaction will rollback
+But in is microservice 
+only local transaction will rollback
+delivery service is seperate standalone application only can delivery service can rollback and mark as delivery failed 
+but payment is not reverted because this is different boundery it is part of  payment application
+bounderies of delivery service is the transaction started and ended in the same application that is deliver application
+
+just delivery service local transaction will not be able to revert the payment this is the problem
+
+payment and order is not reverted so this is bad experiance to user. It is exmple of failed to manage distributed transaction.
+
+What is distributed transaction
+A transaction that spends across the multiple microservices becomes the distributed transaction
+To handle the distributed transaction saga designe pattern came into picture.
+
+
+Each of the local transaction which is responsible for the  making changes in the same microservice become, local transaction becomes the saga.
+Hear we have 4 saga's T1 T2,T3,T4
+
+Create order and update order this is saga 1 transaction 1(T1)
+open the payment page make you do the the payment and validate your payment and update the payment tables. that is transaction 2(T2) saga 2.
+deliver at your doore step and update the deliver table that is saga 3 transaction 3(T3)
+order is delivered successful  that is transaction 4 saga 4.
+------------------
+A saga is that sequece of local transactions
+Each saga has 2 jobs to Do
+ update the current micro service and make required changes
+ publish events to trigger the next transaction for the next microservices.
+ 
+
+--------------------
+What each saga job?
+each saga  can do 2 jobs here 
+modifiy orders table, modify everything required in order service
+create an order and create an event in sequential order so that payment page can be done.
+do your local task by the local transaction and trigger an event to the next micro service in sequecne
+
+now payment service saga responsible for payments validate and  trigger an event for delivery if transaction succesful
+
+if delivery is succesful then create an another event order is valid/succesful
+This are 2 tasks of single saga
+The single saga has to current micro servicene make required changes table
+2nd publish an event next transaction of next microservice in sequece.
+
+How saga design pattern handles this kind of issues
+if delivery is failed then and payment is not reverted and  order is not marked as failed.
+So this is not a proper transaction management
+
+We need to impliment saga design problem implements successflow reverte flow
+
+1st order service
+saga 1 comes
+create/modify and order and hits createOrderEvent
+invoke payment service
+
+2nd payment service
+saga 2 comes
+show up payment validate payment and payment is successful and hits validatePaymentEnvent
+new calls deliverEvent invoke
+if payment is fails  it calls reversPaymentEvent event
+revertEventPayment is responsible for cancelOrderEvent which responsible for cancel order go head wiht next order event
+
+
+3rd deliver service
+saga 3 comes
+now local transaction of delivery service is invoked
+saga 4 comes
+deliver is sucessfull and mark as order is successful
+
+
+if delivery failes calls for deliverFailedEvent responsible for revertEventPayment
+ir deliver fails revertEventPayment revert the payment to account
+revertEventPayment is responsible for triggering cancelOrderEvent which responsible mark order as cancel, order
+Now go head wiht next order event
+
+
+We will never do rollback in this we can only revert 
+revertEventPayment interally calls canceOrderEvent
+
+----------How Saga DP handles failure of any individual SAGA?
+The Saga pattern provides transaction management with using sequece of local transactions of microservice. Every microservice has its own database and it can able to manage local transactions in atomic way with strict consistency.
+
+So saga pattern grouping these local transactions and sequential invoking one by one. Each local transaction  updates the database and publishes an event to trigger the next local transaction.
+
+If one of the step is failed the saga pattern trigger rollback transactions that are a set of compensation transactions that rollback the changes on previous microservices and restore data consistency.
+----------
+Ways to Implement SAGAThere are two types of saga implemenation ways
+Choreography 
+Orochrstarion 
+Choreography Saga Pattern
+you can cordinate with single message broker
+create a order event that calls order service 
+release payment service
+now message broker send end event goes to payment service payment sucessful and
+the message broker send event to deliver service . the devlivery service delivers food
+All are asynchorinsly communicate each other
+
+------------What is Choreography Saga Pattern
+Choreography is a way to coorinate local sagas where participants exchange events without a centerailized point of control.
+With choreography each microservices run its own local transaction and publishes events to message broker system and triggers next local transactions in other microservice 
+-----------
+everybody will interact each othere with this message broker take the message sand sends the message
+next  local transaction initated with message broker
+---------Advantage of Choerography Saga Pattern?
+Good for single workflows that require few participants and dont need a co ordination logic
+Doesn't require additional implemenation and maintenance.
+Doesn't introduce a single point of failure, since the responsibilities are distributed across the saga participants
+rabitMq,Kafka,ActiveMQ
+---------Disadvantage of Choerography Saga Pattern?
+Workflow can become confusing when adding new steps as its difficult to track which participants listen to which commands
+There's  a risk of cyclic dependecy between saga participants because they have to consume each other's commands
+Integration testing is difficult because all services must be running to simulate a transaction
+-----------
+Now payment is service is listenint to Deliver service . Delivery service is listening to payment service but it becomes when messages more and more who is listening what.
+There is no backtracking. there is no track what if something goes wrong .backtracking is very difficult.
+order is sending message to payment. But payment also required some message from order service there is cyclic dependecy because each other consume others command.
+one is waiting for second command . second is waiting for  first command this will be cycyle in choreography
+all are running the simulator transaction Integration testing is difficult because  you don't which service is listen to which message and how it is going to react.
+
+
+------------What is Orochrstarion Saga Pattern
+Orchestration is a way to coordinate sagas where centralized controller tells the saga participants what local transactions to execute.
+The saga orchestrator handles all the transactions and tells the participants which operation to perform based on events.
+The orchestrator
+	execute saga requests
+	stores and interprests the states of each task.
+	handles failure recovey with compensating transactions.
+-------
+controlled
+here orchestrator is java component. This orchestratoris going to handles all kind of events going here and there.
+It is a single point of connection fo each and evey body
+What is the task of orchestrator
+first execute saga
+second to store the state of each task.
+if task is succesful trigger another event to next microservice in line.
+but if it failed then you have to call the revert transaction. so that task is also done by orchestrator.
+So it not only comands which micro service has to work. but it also any comands if in case  any microservice failed to do task. then it has the responbility rule reverted till the start.
+This single point of centerailized orchestrator commands everybody and also mange the state
+if successful go and call other local transaction
+if failed it calls compensating transaction so it handles failure recovery with compensating transaction.
+orchestrator is going to give the command to they are not going to listen any message prasent in message broker.
+---------Advantage of Orochrstarion Saga Pattern?
+Good for complex workflows involving mansy participants or new participants added over time
+Suitable when there is control over every participant in the process. and control over the flow of activites
+Doesn't interoduce cyclic dependecies because the orchestrator unliterally depends on the participants
+Saga participents don't need to know about commands for other participants. Clear seperation concerns simplifies business logic.
+-----------
+Reduce confusion which microsevice is listening to which particular command and what particular transaction
+they cannot just go ahead and listen to any message present from any broker. they are going to get the command directly from tjhe orchestrator
+here we can backtracking  orchestrator is lock everything so if you go through logs what transaction is done after what.
+this unliterally participant is a command dependecy thats it none of the saga needs to know about any of the commands for other participants
+there is clear participants between segerigation .It is going coorinate everything so there is an additional design complexity
+---------Disadvantage of Orochrstarion Saga Pattern?
+Additional design complexity require an implemenation of a coordination logic
+There is an additional point of failure. because orchestrator manages the complete workflows
+----------
+you have to take an extra step create your own orchestrator and manage everything  at single point
+also this is goint to create a problem because that single point will become a additional point of failure 
+if orchestrator is down. everthing is down eventhough order service/delivery service is up
+
+
+	
+
+
+
+
+
+
+ 

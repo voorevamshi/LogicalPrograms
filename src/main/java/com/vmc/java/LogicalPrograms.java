@@ -4,7 +4,7 @@ public class LogicalPrograms {
 	public static void main(String[] args) {
 		LogicalPrograms logicalPrograms = new LogicalPrograms();
 		 logicalPrograms.executeLogic("com.vmc.java.ArmstrongNumberChecker");
-		// logicalPrograms.executeLogic("com.vmc.java.SecondHighestNumber");
+		 //logicalPrograms.executeLogic("com.vmc.java.SecondHighestNumber");
 		// logicalPrograms.executeLogic("com.vmc.java.Palindrome");
 		// logicalPrograms.executeLogic("com.vmc.java.ReverseNumber");
 		// logicalPrograms.executeLogic("com.vmc.java.Occurence");

@@ -1,0 +1,29 @@
+int 		  compare(T o1, T o2)    -->Compares two objects and returns negative, zero or positive. based on sorting order(abstract method)
+										Comparator<Employee> sortBySalary=(e1,e2)->Double.compare(e1.getSalary(),e2.getSalary())
+						
+Comparator<T> reversed() 			 -->Returns a comparator that reverses the natural order
+										Comparator<Employee> sortBySalaryDesc=Comparator.comparingDouble(Employee::getSalary).reversed()
+						
+Comparator<T> thenComparing        	 -->Used for multi-level sorting(secondary sorting if primary sort is equal)
+										Comparator<Employee> comparator=Comparator.comparingDouble(Employee::getSalary).thenComparing(Employee::getName)
+						
+Comparator<T> naturalOrder()		 -->Returns a comparator that comares object according to theri natural ordering(e.g String, Integer)
+										Employee should implements Comparable(Means needs to override compare(){this.name.compareTo(other.name)}) and employees.sort(Comparator.naturalOrder())
+						
+Comparator<T> reverseOrder()     	  -->Returns a comparator that imposes the reverse of the natural orderering
+										Employee should implements Comparable and employees.sort(Comparator.reverseOrder())
+
+
+Comparator<T> comparing(Function keyExtractor) 		 			 --> Builds a comparator based on object field
+																	 employees.sort(Comparator.comparing(Employee::getSalary))
+Comparator<T> comparingInt(ToIntFunction keyExtractor) 			 --> Specialized version for comparing int fields
+																	 employees.sort(Comparator.comparingDouble(Employee::getSalary))
+Comparator<T> comparingDouble(ToDoubleFunction keyExtractor)  	 --> Specialized version for comparing double fields
+Comparator<T> comparingLong(ToLongFunction keyExtractor)	     --> Specialized version for comparing long fields
+
+compareTo method
+current object is less than the other. returns <0
+current object is equal to the other. returns 0
+current object is grater than the other. returns >0
+
+

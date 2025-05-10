@@ -77,9 +77,8 @@ public class ArmstrongNumberChecker implements Logic {
             System.out.println("Invalid input: " + input);
             return false;
         }
-        int sum = input.chars()
-                .map(c -> (int) Math.pow(c - '0', input.length()))
-                .sum();
+      //  int sum = input.chars() .map(c -> (int) Math.pow(c - '0', input.length())).sum();
+        int sum = input.chars() .map(c->c-'0') .reduce(0, (acc, digit) -> acc + (int) Math.pow(digit, input.length()));
         return Integer.parseInt(input) == sum;
     }
 

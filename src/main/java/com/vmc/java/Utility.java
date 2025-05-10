@@ -1,32 +1,35 @@
 package com.vmc.java;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class Utility {
 
-	public static void printInput(int[] input) {
-		System.out.print("Input:\t");
-		for (int i = 0; i < input.length; i++) {
-			System.out.print(input[i] + "\t");
-		}
-		System.out.println();
-	}
+    public static void printArray(Object array) {
+        if (array instanceof int[]) {
+            System.out.println("Array: " + Arrays.toString((int[]) array));
+        } else if (array instanceof float[]) {
+            System.out.println("Array: " + Arrays.toString((float[]) array));
+        } else if (array instanceof double[]) {
+            System.out.println("Array: " + Arrays.toString((double[]) array));
+        } else {
+            throw new IllegalArgumentException("Unsupported array type. Only int[], float[], and double[] are allowed.");
+        }
+    }
 
-	public static void printOutput(int[] input) {
+    public static <T> void printList(List<T> list) {
+        System.out.println("List data: " + list);
+    }
 
-		System.out.print("Output:\t");
-		for (int i = 0; i < input.length; i++) {
-			System.out.print(input[i] + "\t");
-		}
-		System.out.println();
-	}
+    public static <T> void printSet(List<T> set) {
+        System.out.println("Set data: " + set);
+    }
 
-	public static void printMap(Map<Character, Integer> map) {
-		Set<Character> set = map.keySet();
-		for (Character character : set) {
-			System.out.println(character + " Occurences count is " + map.get(character));
-		}
-	}
+    public static <T,S> void printMap(Map<T, S> map) {
+        System.out.println("Map data: " + map);
+    }
+
 
 }

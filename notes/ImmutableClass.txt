@@ -1,0 +1,83 @@
+final class Employee{
+private final int empId;
+private final String empName;
+private final List<String> skills;
+private final Address address;
+public Employee(int empId,String empName,List<String> skills,Address address)
+thi.skills =new ArrayList<>(skills);
+}
+//no setter
+only getter
+1)The class is declared as final to prevent inheritance,  fields marked as final to ensure it can only be assigned once.
+2)There are no setter methods. Once the object is creaed, the value of immutableField cannot be changed
+3)The constructor initializes the immutable Field with the provided value.
+4)There is a getter method  to access the value of the immutable field, but it does not allow modification of the field.
+
+public final class Address {
+    private final String street;
+    private final String city;
+    private final String postalCode;
+
+    public Address(String street, String city, String postalCode) {
+        this.street = street;
+        this.city = city;
+        this.postalCode = postalCode;
+    }//getters only
+}
+Address add=new Address("street","city","pinCode");(1001)
+Employee emp=new Employee(10,"vamshi",skills,add);
+add=new Address("street2","city2","pinCode2");(10002)
+
+as Address is just changed reference to 
+it will not effect the data inside Address object.
+1)The empName field is marked as final to ensure it cannot be changed after object creation.
+2)The address field is also marked as final, but it holds an instance of the immutable Address class.
+3)The constructor initializes both empName and address fields with the provided values.
+4)Getter methods are provided to access the values of empName and address, but they do not allow modification of the fields or the contained Address instance.
+---------------------
+Employee class contains list of address class.  Can address class also act as immutables
+public class Employee {
+    private String name;
+    private final List<Address> addresses;
+
+    public Employee(String name, List<Address> addresses) {
+        this.name = name;
+        this.addresses = new ArrayList<>(addresses); // Make a defensive copy
+    }
+}
+In the Employee class, a defensive copy of the list of addresses is made in the constructor to ensure that the original list remains unchanged.
+The getAddresses() method returns an unmodifiable view of the list of addresses to prevent external modification.
+
+====================================================clone======================================================================================
+How to deep clone for  employee class?
+class Employee implements Cloneable{
+	@Override
+    public Object clone() {
+        try {
+            Employee cloned = (Employee) super.clone();
+            // Perform deep cloning for the Address object
+            cloned.address = (Address) address.clone();
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+}
+1)The clone() method is overridden to perform a deep copy of the Employee object. It calls super.clone() to create a shallow copy of the Employee object, and then it performs a deep copy of the Address object by calling its clone() method
+2)The Address class must also implement the Cloneable interface and override the clone() method to support deep cloning. This ensures that changes made to the cloned Employee object's Address won't affect the original Employee object's Address
+
+public class Address implements Cloneable {
+ @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+}
+1)With this implementation, you can create a deep copy of an Employee object along with its associated Address object by calling the clone() method
+Employee original = new Employee("John Doe", new Address("123 Main St", "Springfield", "12345"));
+Employee cloned = (Employee) original.clone();
+================================================================================================================================
+

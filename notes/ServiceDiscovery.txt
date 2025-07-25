@@ -1,0 +1,84 @@
+ServiceDiscovery is a mechanism that allowes microservices to dynamically discover and communicate with each other without hard coding service locations(Ip address, host names)
+Services register themselves with the discovery server.Ex:Eureka,Console,Zoo Keeper.
+When to use:
+Dynamic environment where services scale up and scale down.
+📦 A. Eureka Server (Java App)
+# application.yml
+server.port: 8761
+eureka.client.register-with-eureka: false
+eureka.client.fetch-registry: false
+
+@EnableEurekaServer
+@SpringBootApplication
+public class EurekaServerApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(EurekaServerApplication.class, args);
+    }
+}
+
+# application.yml
+spring.application.name: user-service
+server.port: 8081
+eureka.client.service-url.defaultZone: http://<EUREKA_HOST>:8761/eureka/
+
+👥 B. Microservice Example: User Service
+@RestController
+@RequestMapping("/users")
+public class UserController {
+    @GetMapping("/{id}")
+    public User getUser(@PathVariable String id) {
+        return new User(id, "John Doe");
+    }
+}
+Use @LoadBalanced RestTemplate to call other services:
+@Bean
+@LoadBalanced
+public RestTemplate restTemplate() {
+    return new RestTemplate();
+}
+
+C. AWS ALB Setup
+Create Target Groups for user-service, order-service
+Register ECS Tasks or EC2 Instances in each group
+Create ALB with listener:
+Path /users/* → forward to user-service target group
+Path /orders/* → forward to order-service target group
+ALB uses round-robin to distribute requests
+
+
+D. AWS API Gateway Setup
+Create HTTP API or REST API
+Set route:
+/users/{id} → integrate with ALB /users/{id}
+/orders/{id} → integrate with ALB /orders/{id}
+
+📈 E. ECS Auto Scaling Setup (Fargate or EC2)
+Use CloudWatch alarms on CPU % or RPS
+Create Auto Scaling policy:
+Scale out: CPU > 60%
+Scale in: CPU < 30%
+ECS will add or remove instances automatically
+
+
+F. Service-to-Service Discovery
+In UserService, to call OrderService:
+
+String url = "http://order-service/orders/user/1";
+Order[] orders = restTemplate.getForObject(url, Order[].class);
+Eureka will resolve order-service → IP of one of its instances.
+
+✅ Summary Architecture Flow
+Client
+  ↓
+API Gateway (Route-based)
+  ↓
+ALB (Path-based routing + Round-robin)
+  ↓
+ECS Tasks (user-service: 3 instances, order-service: 2)
+  ↓
+Each microservice discovers others via Eureka
+  ↓
+Auto Scaling scales services up/down based on load
+
+
+

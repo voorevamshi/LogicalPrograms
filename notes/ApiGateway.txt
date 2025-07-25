@@ -1,0 +1,141 @@
+Api gateway acts as a single entry point for all the client requests.
+Load balancing:Can distribute traffic across multple instances
+
+It routes the appropriate microservice.
+Rouiting:Routes incomming request to the appropriate microservice.
+
+Cross Cutting concerns like authentication, rate limiting, logging and ssl termination
+It handles cross-cutting concerns like authentication,rate limiting and logging and can generate responses multiple services.
+
+What AWS API Gateway Does:
+Exposes REST endpoints (e.g., /users, /orders)
+Routes to backend Java services
+
+Step-by-Step Implementation (AWS + Java)
+1. Deploy Java Services
+Deploy UserService and OrderService on:
+EC2 or ECS (Spring Boot apps)
+Each exposes endpoints like:
+http://user-service:8081/users/{id}
+http://order-service:8082/orders/user/{id}
+
+2. Create API Gateway (REST or HTTP)
+Go to AWS Console > API Gateway > Create API (choose HTTP API for better performance)
+Add routes:
+HTTP Path	       Method	  Integration Type	         Target URL
+/users/{id}	        GET	        HTTP	                http://<user-service>:8081/users/{id}
+/orders/user/{id}	GET	        HTTP	                http://<order-service>:8082/orders/user/{id}
+
+Set up CORS, if needed.
+
+3. Aggregation via Lambda (Optional)
+If you need an endpoint like /aggregate/user-orders/{id}:
+Create an AWS Lambda function using Java
+Inside, use an HTTP client (e.g., WebClient or HttpClient) to call both services
+Return a combined response
+
+public class AggregatorHandler implements RequestHandler<Map<String,Object>, Map<String,Object>> {
+
+    @Override
+    public Map<String,Object> handleRequest(Map<String,Object> input, Context context) {
+        String userId = input.get("pathParameters").get("id").toString();
+
+        String userJson = callService("http://user-service:8081/users/" + userId);
+        String orderJson = callService("http://order-service:8082/orders/user/" + userId);
+
+        Map<String,Object> response = new HashMap<>();
+        response.put("user", userJson);
+        response.put("orders", orderJson);
+        return response;
+    }
+
+    private String callService(String url) {
+        // Simple HTTP call using Apache HttpClient, OkHttp or native HttpURLConnection
+    }
+}
+Then, map /aggregate/user-orders/{id} in API Gateway to this Lambda function.
+
+What to Say in Interview:
+I used AWS API Gateway as the single entry point for our Java microservices deployed on ECS. Each API route forwards requests to the appropriate service. For security,  For aggregation (like combining user and order data), I used a Lambda function that calls both services and returns a merged response. 
+
+Distributes incoming requests across a set of instances (targets)
+Example: AWS ALB distributes traffic across EC2/ECS instances
+Goal: Evenly balance load, improve performance and reliability
+
+System Setup Overview
+You have:
+
+✅ API Gateway (AWS) as the entry point for client traffic.
+✅ AWS ALB (Application Load Balancer) behind API Gateway to route traffic.
+✅ Microservices (UserService and OrderService) running multiple instances (ECS/EC2).
+✅ Eureka Server for service discovery.
+✅ Each microservice is a Spring Boot app registered with Eureka.
+✅ Load is balanced using round-robin.
+✅ Auto Scaling is configured for ECS services.
+
+                          [Client Request]
+                                 |
+                                 v
+                     +-----------------------+
+                     |   AWS API Gateway     |
+                     +-----------------------+
+                                 |
+                                 v
+                   +--------------------------+
+                   | Application Load Balancer|
+                   +--------------------------+
+                         |            |
+               +----------------+   +----------------+
+               |  UserService-1 |   |  OrderService-1|
+               |  UserService-2 |   |  OrderService-2|
+               |  UserService-3 |   +----------------+
+               +----------------+
+                         |
+          (All services registered with Eureka)
+                         |
+                         v
+            +-------------------------------+
+            |     Eureka Service Registry   |
+            +-------------------------------+
+                         |
+      Each microservice discover
+	  s others by service name
+                         |
+      E.g., UserService calls OrderService via "ORDER-SERVICE"
+                         |
+                         v
+           +-----------------------------+
+           |   Inter-service Communication|
+           |  (via Eureka + RestTemplate/WebClient) |
+           +-----------------------------+
+Client Request
+Hits API Gateway (e.g., GET /users/1 or /orders/user/1)
+
+🎯 2. API Gateway Routes
+Routes request to ALB → based on path like /users/** or /orders/**
+
+🔄 3. ALB Load Balancing
+For /users/** → Round-robin to one of:
+UserService-1, UserService-2, UserService-3
+
+For /orders/** → Round-robin to one of:
+OrderService-1, OrderService-2
+
+🔎 4. Eureka Registration
+All services register themselves with Eureka at startup:
+Microservices talk to each other using logical service names
+
+e.g., UserService calls OrderService using:
+@LoadBalanced
+RestTemplate restTemplate;
+restTemplate.getForObject("http://order-service/orders/user/1", ...)
+📈 6. Auto Scaling
+ECS service monitors CPU/memory or custom metrics (e.g., RPS)
+If threshold exceeds, ECS scales the service:
+UserService may scale from 3 → 5 instances
+OrderService may scale down from 2 → 1
+
+💬 How to Explain in Interview
+"Our architecture uses AWS API Gateway as the main entry point, which routes traffic to ALB. The ALB distributes incoming requests across ECS instances of UserService and OrderService using round-robin. All services are registered in Eureka for discovery. Microservices communicate with each other using logical service names like order-service via Eureka. Auto scaling policies on ECS dynamically scale the number of instances based on CPU usage or request load."
+
+

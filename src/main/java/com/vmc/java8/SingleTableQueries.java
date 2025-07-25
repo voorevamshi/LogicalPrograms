@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.vmc.java8.dto.Employee;
+
 public class SingleTableQueries {
 
 	public static void main(String[] args) {

@@ -3,14 +3,11 @@ package com.vmc.java8;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.vmc.java8.dto.Employee;
+
 public class ComparatorMethods {
     public static void main(String[] args) {
-        List<Employee> employees = Arrays.asList(
-                new Employee(1, "Alice", 50000.0, 'F', new Date()),
-                new Employee(2, "Bob", 60000.0, 'M', new Date()),
-                new Employee(3, "Charlie", 40000.0, 'M', new Date()),
-                new Employee(4, null, 70000.0, 'F', new Date())
-        );
+        List<Employee> employees = Utility.getEmployees();
 
         // 1. Comparator.comparing
       List<Employee> sortedByNameWithoutNull = employees.stream()
@@ -37,13 +34,13 @@ public class ComparatorMethods {
 
         // 5. Comparator.naturalOrder (requires Comparable implementation)
         // 5. Comparator.naturalOrder (with null handling)
-        employees.sort(Comparator.nullsFirst(Comparator.naturalOrder()));
-        System.out.println("Sorted by Name (Natural Order with Nulls First): " + employees);
+      //  employees.sort(Comparator.nullsFirst(Comparator.naturalOrder()));
+      //  System.out.println("Sorted by Name (Natural Order with Nulls First): " + employees);
 
 
         // 6. Comparator.reverseOrder
-        employees.sort( Comparator.nullsFirst(Comparator.reverseOrder()));
-        System.out.println("Sorted by Name (Reverse Order with Nulls First): " + employees);
+       // employees.sort( Comparator.nullsFirst(Comparator.reverseOrder()));
+       // System.out.println("Sorted by Name (Reverse Order with Nulls First): " + employees);
 
         // 7. Comparator.nullsFirst
         employees.sort(Comparator.comparing(Employee::getName, Comparator.nullsFirst(Comparator.naturalOrder())));

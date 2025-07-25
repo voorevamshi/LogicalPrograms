@@ -1,0 +1,15 @@
+1)Collectors Enhancements
+Collectors.toMap() could throw exceptions for duplicate keys. 
+For Handles duplicate keys.BinaryOperator<V> mergeFunction
+Ex: Stream.of("apple", "banana", "apple").collect(Collectors.toMap(item -> item,item -> 1,
+                Integer::sum // Merges duplicates by summing ));         // Output: {apple=2, banana=1}
+				Integer::max // Merges duplicates by max  ));                  // Need to think     
+				(v1, v2) -> v1 + ", " + v2)  )); // Merges duplicates by ","  // Need to think
+
+2. Improvements in Performance and Memory Management
+performance enhancements for the Stream API. especially with intermediate operations like
+filter , map and flatMap 
+
+
+3)Refinements in Optional Stream Methods:->allows converting an Optional to a stream.
+Ex: Optional.of("Hello").stream().forEach(System.out::println); //Output: Hello

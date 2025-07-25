@@ -1,0 +1,36 @@
+It is architecture style where applicaton is built as a collection of small, autonomous services, 
+each responsible for a specific business functionality.
+each microservice should
+Independently deployable
+Loosely coupled
+Typically communicate over lightweight protocols
+
+Key Components
+API Gateway(Spring Cloud Gateway)
+Service Registory & Discovery(Neflx Eureka)
+Circuit Breaker(Resilience4j,Hystrix)
+Load balancing
+Configuration Management(Spring Cloud Config)
+Centralized logging(E.g ELK stack)
+Distributed Tracing(Zipkin, Jaeger)
+
+-->Data management
+each microservce own its own database
+
+
+-->Deployment & Scaling
+Horizontal scaling 
+
+
+-->Security
+Use API Gateway for authentication and authorization
+Token based authenticaton (E.g JWT Oauth2)
+
+
+-->Challanges
+Distributed system complexity
+Data consistency
+Service orchestration
+Debugging and monitoring
+Deployment and versioning
+

@@ -1,0 +1,106 @@
+To connect AWS S3 with Spring Boot use AWS sdk and java v2.
+1)dependencies
+<groupId>software.amazon.awssdk</groupId>
+<artifactId>s3</artifactId>
+<artifactId>auth</artifactId>
+2)In application.yaml file add aws credentials and region
+
+@Configuration
+public class S3Config {
+
+    @Value("${aws.accessKeyId}")
+    private String accessKeyId;
+
+    @Value("${aws.secretAccessKey}")
+    private String secretAccessKey;
+
+    @Value("${aws.region}")
+    private String region;
+
+    @Bean
+    public S3Client s3Client() {
+        AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKeyId, secretAccessKey);
+
+        return S3Client.builder()
+                .region(Region.of(region))
+                .credentialsProvider(StaticCredentialsProvider.create(credentials))
+                .build();
+    }
+}
+Endpoints
+Run & Test
+Upload: POST /s3/upload with multipart file.
+Download: GET /s3/download?key=filename.txt
+Delete: DELETE /s3/delete?key=filename.txt
+
+
+@RestController
+@RequestMapping("/s3")
+public class S3Controller {
+
+    private final S3Service s3Service;
+
+    public S3Controller(S3Service s3Service) {
+        this.s3Service = s3Service;
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws IOException {
+        s3Service.uploadFile(file.getOriginalFilename(), file.getBytes());
+        return ResponseEntity.ok("File uploaded successfully");
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<byte[]> download(@RequestParam String key) {
+        byte[] data = s3Service.downloadFile(key);
+        return ResponseEntity.ok().body(data);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> delete(@RequestParam String key) {
+        s3Service.deleteFile(key);
+        return ResponseEntity.ok("File deleted successfully");
+    }
+}
+
+@Service
+public class S3Service {
+
+    @Value("${aws.s3.bucketName}")
+    private String bucketName;
+
+    private final S3Client s3Client;
+
+    public S3Service(S3Client s3Client) {
+        this.s3Client = s3Client;
+    }
+
+    public void uploadFile(String key, byte[] content) {
+        PutObjectRequest putRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+
+        s3Client.putObject(putRequest, RequestBody.fromBytes(content));
+    }
+
+    public byte[] downloadFile(String key) {
+        GetObjectRequest getRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+
+        ResponseBytes<GetObjectResponse> objectBytes = s3Client.getObjectAsBytes(getRequest);
+        return objectBytes.asByteArray();
+    }
+
+    public void deleteFile(String key) {
+        DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+
+        s3Client.deleteObject(deleteRequest);
+    }
+}
+

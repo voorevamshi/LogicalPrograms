@@ -1,0 +1,36 @@
+Collector<Employee, ?, Optional<Employee>> collectors=Collectors.maxBy(Comparator.comparing(Employee::getSalary)); 
+with the help of this can we get highest Salary of employee?
+
+No not directly
+The Collectors object is here is just blue print -->a Collector defination
+It does not hold any data, and therefore you can't get the higest salary directly from it.
+
+Collector<Employee, ?, Optional<Employee>> is just an instruction on how to perform a collection
+To actually compute the result, you need to apply it to stream
+Approach 1:Double salary=employees.stream().collect(Collectors.maxBy(Comparator.comparing(EmpDept::getSalary))).get().getSalary();
+Approach 2:Find the max salary employee-->(More flexible, used with grouping)
+		   Optional<Employee> result = employees.stream().collect(Collectors.maxBy(Comparator.comparing(Employee::getSalary)));
+Approach 3:Using Stream.max(...) (No collect())-->(Simple and concise)
+		   Optional<Employee> result = employees.stream().max(Comparator.comparing(Employee::getSalary));
+
+------------------Map.Entry Methods---------------
+getKey()			Returns the key
+getValue()			Returns the value
+setValue(V value)	Replaces the value
+comparingByKey()	Static method for comparing by key
+comparingByValue()	Static method for comparing by value
+
+--------------------Collectors Averaging methods
+1.Collectors.averagingInt(ToIntFunction<T> mapper)
+double avgAge = employees.stream().collect(Collectors.averagingInt(Employee::getAge));
+
+2. Collectors.averagingLong(ToLongFunction<T> mapper)
+double avgId = employees.stream().collect(Collectors.averagingLong(Employee::getId));
+
+3.Collectors.averagingDouble(ToDoubleFunction<T> mapper)
+double avgSalary = employees.stream().collect(Collectors.averagingDouble(Employee::getSalary));
+
+// Group employees by gender and get the employee with the average salary in each department
+Map<String, Double> averageSalaryByGender = employeesList.stream().collect(Collectors.groupingBy(
+				Employee::getGender, Collectors.averagingDouble(Employee::getSalary)));
+--------------------Collectors Summing methods

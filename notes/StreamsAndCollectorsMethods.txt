@@ -1,0 +1,148 @@
+Stream – Interface 
+Provides a sequence of elements supporting functional-style operations (e.g. filter, map, reduce, etc.)
+public interface Stream<T> extends BaseStream<T, Stream<T>> {...}
+
+Collectors – Utility and final Class
+Provides static factory methods for common collectors used with Stream.collect(...)
+
+List<Integer> intList = input.chars().mapToObj(c -> c - '0').toList();
+
+input.chars(): This method converts the input string into an IntStream, 
+where each element in the stream represents the Unicode value of a character in the string. 
+For example, if input is "153", the stream will contain the values [49, 53, 51] (the Unicode values of '1', '5', and '3').  
+
+.mapToObj(c -> c - '0'):
+The mapToObj function is used to transform each Unicode value in the stream into its corresponding integer representation. 
+The expression c - '0' works because the Unicode value of '0' is subtracted from the Unicode value of the character c, effectively converting the character to its numeric value. 
+For example, '1' - '0' results in 1, '5' - '0' results in 5, and so on.
+  
+======================Stream methods=====================
+Stream<T>    mapToObj(IntFunction<R>):    Converts each element of the stream into an object of a different type.Ex: IntStream.of(1, 2, 3).mapToObj(i -> "Number: " + i);
+IntStream    mapToInt(ToIntFunction<T>):    Converts each element of the stream into an int value.Ex: Stream.of("1", "2", "3").mapToObj(Integer::parseInt);
+LongStream   mapToLong(ToLongFunction<T>):   Converts each element of the stream into a long value.Ex: Stream.of("10000000000", "20000000000").mapToLong(Long::parseLong); 
+DoubleStream mapToDouble(ToDoubleFunction<T>): Converts each element of the stream into a double value.Ex: Stream.of("1.5", "2.5", "3.5").mapToDouble(Double::parseDouble);
+Ex: ToDoubleFunction<T> → returns a double value
+
+
+.toList(): Finally, the toList() method collects the transformed stream elements into a List<Integer>. This results in a list of integers representing the digits in the input string.
+For example, if input is "153", the resulting intList will be [1, 5, 3].
+
+The Stream class in Java provides several collect methods
+======================Collectors methods=====================
+1.List<S> 		toList()		:Collects the elements into a List. 									            Ex: Stream.of("A", "B", "C").collect(Collectors.toList());
+2.Set<S>  		toSet() 		:Collects the elements  Set (removes duplicates). 				                    Ex: Stream.of("A", "B", "A").collect(Collectors.toSet());
+3.Map<I, S>		toMap()			:Collects the elements of the stream into a Map using key and value mapping fun.    Ex: Stream.of("A", "BB", "CCC").toMap(String::length, s -> s)
+
+4.String 			joining() 		:Concatenates the elements of the stream into a single String.					    Ex: Stream.of("A", "B", "C").collect(Col.joining(", "));
+5.Map<I, List<S>>	groupingBy()	:Groups the elements by a classifier returns a Map.keys are the classifier results. Ex: Stream.of("A", "BB", "CCC").groupingBy(String::length)
+8.Map<B, List<I>>   partitioningBy():Partitions the elements of the stream into two groups based on a predicate.		Ex: Stream.of(1, 2, 3, 4).partitioningBy(n -> n % 2 == 0)
+
+9.long			    counting()		:Counts the number of elements in the stream.							   Ex: Stream.of("A", "B", "C").counting();
+10.int				reducing()		:Performs a reduction operation on the elements of the stream.			   Ex: Stream.of(1, 2, 3).reducing(0, Integer::sum);
+11.List<I>			mapping()		:Applies a mapping function to the elements before collecting them	       Ex:Stream.of("A", "BB", "CCC").Collectors.mapping(i -> i * 2, toList())
+																			list -> list.stream().map(String::toUpperCase).collect(Collectors.toList())));
+13.IntSummaryStatistics		summarizingInt()	:Ex:Stream.of(1, 2, 3).summarizingInt(Integer::intValue).getSum()
+16.DoubleSummaryStatistics 	summarizingDouble() :Ex:Stream.of(1.5, 2.5, 3.5) .collect(Collectors.summarizingDouble(Double::doubleValue)).getAverage()
+17.LongSummaryStatistics    summarizingLong() 	:Ex:Stream.of(1L, 2L,3L).collect(Collectors.summarizingLong(Long::longValue)).getMax()
+												 Here statistics is nothing but (count, sum, min, average, max)
+
+20.<T> Collector<T, ?, Double> averagingDouble(ToDoubleFunction<? super T> mapper)                       Ex: employees.stream().collect(Collectors.averagingDouble(Employee::getSalary));
+21<T, A, R, RR> Collector<T, A, RR> collectingAndThen( Collector<T, A, R> downstream,Function<R, RR> finisher)
+| Argument     | Type                 | Description                                      |
+| ------------ | -------------------- | ------------------------------------------------ |
+| `downstream` | `Collector<T, A, R>` | A collector (like `toList()`, `toSet()`, etc.)   |
+| `finisher`   | `Function<R, RR>`    | A function to **transform the collected result** |
+Ex:
+List<String> names = List.of("A", "B", "C");
+List<String> unmodifiableList = names.stream().collect(Collectors.collectingAndThen(Collectors.toList(),Collections::unmodifiableList ));
+Optional<Employee> highestPaid = employees.stream().collect(Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparing(Employee::getSalary)),Optional::get));
+List<String> upperNames = employees.stream().collect(Collectors.collectingAndThen(Collectors.mapping(Employee::getName, Collectors.toList()),
+
+.
+======================toMap method arugments=====================
+1)toMap method with two arugments
+ Throws exception on duplicate keys.
+	Function<? super T, ? extends K> keyMapper,
+	Function<? super T, ? extends V> valueMapper
+	-->Map<Integer, String> map1 = Stream.of("A", "BB", "CCC").collect(Collectors.toMap(String::length, s->s));
+2)toMap method wit Three-arguments
+Handles duplicate keys.
+	Function<? super T, ? extends K> keyMapper,
+    Function<? super T, ? extends V> valueMapper,
+    BinaryOperator<V> mergeFunction
+	-->Map<Integer, String> map2 = Stream.of("A", "BB", "CC").collect(Collectors.toMap(String::length, s->s,(v1, v2) -> v1 + ", " + v2));
+3)toMap with  Four-arguments
+decide which Map implementation to use (like TreeMap, LinkedHashMap, etc.)
+	Function<? super T, ? extends K> keyMapper,
+    Function<? super T, ? extends V> valueMapper,
+    BinaryOperator<V> mergeFunction,
+    Supplier<Map<K, V>> mapSupplier
+Map<Integer, String> map3 = Stream.of("A", "DD", "FF","CC","EEE").collect(Collectors.toMap(String::length, Function.identity(),(v1, v2) -> v1 , TreeMap::new));
+======================joining method arugments=====================
+Collectors.joining()
+Collectors.joining(", ")-->delimiter
+Collectors.joining(delimiter, prefix, suffix)
+======================groupingBy method arugments=====================
+1)groupingBy Classifier
+groupingBy(Function<? super T, ? extends K> classifier)
+Map<Integer, List<String>> groupMap = Stream.of("A", "BB", "CCC").collect(Collectors.groupingBy(String::length));
+
+2)groupingByClassifier, Downstream Collector
+groupingBy(Function<? super T, ? extends K> classifier,Collector<? super T, A, D> downstream)
+Map<Integer, List<String>> groupMap = Stream.of("A", "BB", "CCC").collect(Collectors.groupingBy(String::length, Collectors.toList()));
+
+3)groupingBy Classifier, Supplier<Map>, Downstream Collector
+groupingBy(Function<? super T, ? extends K> classifier,Supplier<M> mapFactory,Collector<? super T, A, D> downstream)
+Map<Integer, List<String>> result = Stream.of("a", "bb", "cc").collect(Collectors.groupingBy(String::length,TreeMap::new,Collectors.toList()));
+======================partitioningBy method arugments====================
+1)partitioningBy(Predicate<? super T> predicate)
+Map<Boolean, List<Integer>> partitionMap = Stream.of(1, 2, 3, 4).collect(Collectors.partitioningBy(n -> n % 2 == 0));
+2. partitioningBy Predicate, Downstream Collector
+Map<Boolean, Long> result = Stream.of(1, 2, 3, 4).collect(Collectors.partitioningBy(n -> n % 2 == 0,Collectors.counting()));
+======================reducing method arugments====================
+1)reducing(BinaryOperator<T> op)
+Optional<Integer> max = Stream.of(3, 5, 7, 2).collect(Collectors.reducing(Integer::max));
+2)reducing(T identity, BinaryOperator<T> op)
+int reducedValue = Stream.of(1, 2, 3, 4).collect(Collectors.reducing(0, Integer::sum));
+3)reducing(U identity, Function<? super T, ? extends U> mapper, BinaryOperator<U> op)
+double totalSalary = Utility.getEmployees().stream().collect(Collectors.reducing(0.0,e -> e.getSalary(),Double::sum));
+======================mapping method arugments====================
+1)mapping(Function<? super T, ? extends U> mapper,Collector<? super U, A, R> downstream)
+List<Integer> mappingList = Stream.of(1, 2, 3, 4).collect(Collectors.mapping(i -> i * 2, Collectors.toList()));
+
+======================Collectors summarizingInt,summarizingLong,summarizingDouble  method arugments====================
+public static <T> Collector<T, ?, IntSummaryStatistics> summarizingInt(ToIntFunction<? super T> mapper)
+IntSummaryStatistics intSummaryStatistics = Stream.of(1, 2, 3, 4).collect(Collectors.summarizingInt(i -> i));
+
+public static <T> Collector<T, ?, DoubleSummaryStatistics> summarizingDouble(ToDoubleFunction<? super T> mapper)
+summarizingDouble() is used to collect summary statistics (count, sum, min, max, average) for double values in a stream.
+ToDoubleFunction<T>	 Function to extract a double from each stream element
+Optional<Double> maxValue = Stream.of(1.0, 2.0, 3.0, 4.0).collect(Collectors.maxBy(Comparator.comparingDouble(i -> i)));
+
+======================Collectors maxBy,minBy  method arugments====================
+public static <T> Collector<T, ?, Optional<T>> maxBy(Comparator<? super T> comparator)
+Comparator<? super T>	A comparator to compare stream elements
+Ex:Optional<Long> minValue = Stream.of(1L, 2L, 3L, 4L).collect(Collectors.minBy(Comparator.naturalOrder()));
+Ex:Optional<Employee> highest = employees.stream().collect(Collectors.maxBy(Comparator.comparing(Employee::getSalary)));	
+======================Stream methods=====================
+18.Optional<Double>max	    :maximum value in a stream of doubles                              	Ex:Stream.of(1.0, 2.0, 3.0,4.0).max(Comparator.comparingDouble(i -> i)));
+19.Optional<Long>min       :minimum value in a stream of longs							        Ex:Stream.of(1L, 2L, 3L,4L).min(Comparator.naturalOrder()));
+Ex:Optional<Employee> highest = employees.stream().max(Comparator.comparing(Employee::getSalary));
+======================Stream sorted  method arugments====================
+Stream<T> sorted()						-->Natural ordering(Comparable) Ex:Stream.of(3, 1, 4, 2).sorted().forEach(System.out::print); // Output: 1234
+Stream<T> sorted(Comparator<? super T>) -->Custom sorting
+Ex:employees.stream().sorted(Comparator.comparing(Employee::getSalary)).collect(Collectors.toList());
+======================List sort  method arugments====================
+List<String> names = Arrays.asList("Charlie", "Alice", "Bob");
+names.sort(Comparator.naturalOrder());					-->Natural Order (Strings)
+names.sort(Comparator.comparing(Employee::getSalary));  -->Sorting Custom Objects (Employees by Salary)
+===================Optional ifPresent & ifPresentOrElse method arugments======================
+void ifPresent(Consumer<? super T> action)					Ex:optionalEmp.ifPresent(emp -> System.out.println(emp.getName()));
+void ifPresentOrElse(Consumer<? super T> action, Runnable emptyAction)(Java 9) 
+Ex: name.ifPresentOrElse(n -> System.out.println("Name: " + n),() -> System.out.println("Name not available"));
+===================Stream<T>/Collection<T> forEach method arugments======================
+void forEach(Consumer<? super T> action) 					Ex:employees.forEach(emp -> System.out.println(emp.getName()));
+===================Map forEach method arugments======================
+void forEach(BiConsumer<? super K, ? super V> action)       Ex:map.forEach((key, value) ->  System.out.println("Key: " + key + ", Value: " + value));
+===================Stream/IntStream/LongStream/DoubleStream skip method arugments======================
+Stream<T> skip(long n) Ex: Stream.of("A", "B", "C", "D", "E").skip(2).forEach(System.out::println);

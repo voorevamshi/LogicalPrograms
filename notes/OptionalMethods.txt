@@ -1,0 +1,91 @@
+Optional is a class (not interface).
+It supports functional programming by using functional interfaces internally.
+This design helps us write null-safe, readable, and concise code.
+
+static <T> Optional<T> empty()
+static <T> Optional<T> of(T value)
+static <T> Optional<T> ofNullable(T value)
+
+boolean isPresent()
+boolean isEmpty() // Since Java 11
+T get()
+T orElse(T other)
+T orElseGet(Supplier<? extends T> supplier)
+<T extends X> T orElseThrow(Supplier<? extends X> exceptionSupplier)
+
+void ifPresent(Consumer<? super T> action)
+void ifPresentOrElse(Consumer<? super T> action, Runnable emptyAction) // Java 9
+Optional<T> filter(Predicate<? super T> predicate)
+<U> Optional<U> map(Function<? super T, ? extends U> mapper)
+<U> Optional<U> flatMap(Function<? super T, Optional<U>> mapper)
+
+import java.util.*;
+import java.util.stream.*;
+
+public class TestOptional {
+    public static void main(String[] args) {
+        List<Employee> list = Arrays.asList(
+            new Employee("Alice"),
+            new Employee("Bob"),
+            new Employee("Arun")
+        );
+
+        Optional<List<Employee>> optionalEmployees = Optional.ofNullable(list);
+
+        List<Employee> filtered = optionalEmployees
+            .filter(l -> !l.isEmpty())
+            .map(l -> l.stream()
+                       .filter(e -> e.name.startsWith("A"))
+                       .collect(Collectors.toList()))
+            .orElse(Collections.emptyList());
+
+        filtered.forEach(System.out::println);
+		
+    }
+}
+Exp:1
+
+		List<Optional<String>> list = Arrays.asList(
+			Optional.of("A"),
+			Optional.empty(),
+			Optional.of("B")
+		);
+
+		List<String> filtered = list.stream()
+			.flatMap(opt -> opt.map(Stream::of).orElseGet(Stream::empty))
+			.collect(Collectors.toList());
+
+		System.out.println(filtered); // Output: [A, B]
+
+
+
+.flatMap(opt -> opt.map(Stream::of).orElseGet(Stream::empty))
+opt is an Optional<T>, and this unwraps the value into a Stream<T>.
+Used inside .flatMap() to flatten multiple Optionals into a single stream of values.
+✅ opt.map(Stream::of)
+map is a method on Optional<T>, which transforms the value if present.
+Stream::of is a method reference that wraps a value into a Stream.
+Here, opt.map(Stream::of).orElseGet(Stream::empty) uses the clear contract of Optional: if value present, use it; else, ignore.
+
+Exp:2
+		System.out.println("Using orElse:");
+        String result1 = Optional.of("Vamshi").orElse(getDefault());
+        System.out.println("Result: " + result1);
+
+        System.out.println("\nUsing orElseGet:");
+        String result2 = Optional.of("Vamshi").orElseGet(() -> getDefault());
+        System.out.println("Result: " + result2);
+
+    public static String getDefault() {
+        System.out.println("⚙️ getDefault() called");
+        return "Default";
+    }
+
+Using orElse:
+⚙️ getDefault() called
+Result: Vamshi
+
+Using orElseGet:
+Result: Vamshi
+Even though "Vamshi" was present, getDefault() was still called in orElse() — wasteful!
+

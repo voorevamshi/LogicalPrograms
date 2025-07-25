@@ -1,0 +1,15 @@
+CircuitDesignPattern prevents from failure requests of a service when it is down.
+It avaids burdon on the system and provide fallback failue event machanism.
+
+class OrderService{
+
+@Autowiredd
+private PaymentService paymentService;
+
+@CircuitDesignPattern
+@Reselintj(fallbackMethod="failedPayment")
+public void processOrder(Intger orderId){
+	paymentService.getFoObject(orderId)
+}
+
+}

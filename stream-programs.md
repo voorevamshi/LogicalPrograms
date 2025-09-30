@@ -1,19 +1,12 @@
-# Employee Management – Java 8 Stream Examples
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/5a4c9424-2e3e-4e32-8eb3-f9fda37c07dc" /># Employee Management – Java 8 Stream Examples
 
 This repository demonstrates interview-style coding questions using **Java 8 Streams and Collectors** on `Employee`, `Department`, and `Address` classes.
 
 ## 📌 Class Structure
 
 public class Employee {
-    private Integer id;
-    private String name;
-    private Double salary;
-    private Character gender;
-    private Date joinDate;
     private Department department;
     private List<Address> address;
-
-    // constructor, getters, setters, toString
 }
 
 # Logical Programs on Employee Data

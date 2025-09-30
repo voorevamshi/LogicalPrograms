@@ -2,8 +2,6 @@
 
 This repository demonstrates interview-style coding questions using **Java 8 Streams and Collectors** on `Employee`, `Department`, and `Address` classes.
 
----
-
 ## 📌 Class Structure
 
 ### `Employee`
@@ -32,7 +30,6 @@ public class Employee {
 
 ## Analytical Programs
 - **Which department has highest count of employees**  
-  → `map.entrySet().stream().max(Map.Entry::compareByValue).get();`
 - **Which department has more employees** → Compare departments based on employee count.
 - **Gender based average salary whose stay in Hyderabad and salary above 10,000** → Calculate gender-based average salaries with filters.
 - **City wise count of employees** → Get count of employees grouped by city.

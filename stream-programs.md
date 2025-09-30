@@ -5,7 +5,7 @@ This repository demonstrates interview-style coding questions using **Java 8 Str
 ## Employee Class
 - **Employee class contains:**
   - Department
-  - List<Address>
+  - List of Address
 
 # Logical Programs on Employee Data
 

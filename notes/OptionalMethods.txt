@@ -19,6 +19,7 @@ Optional<T> filter(Predicate<? super T> predicate)
 <U> Optional<U> map(Function<? super T, ? extends U> mapper)
 <U> Optional<U> flatMap(Function<? super T, Optional<U>> mapper)
 
+
 import java.util.*;
 import java.util.stream.*;
 
@@ -88,4 +89,96 @@ Result: Vamshi
 Using orElseGet:
 Result: Vamshi
 Even though "Vamshi" was present, getDefault() was still called in orElse() — wasteful!
+
+Example:2
+
+Input:List<String> list1 = Arrays.asList("1", "3", "A", "4", "xyz");
+
+public class Main {
+    public static void main(String[] args) {
+        List<String> list1 = Arrays.asList("1", "3", "A", "4", "xyz");
+
+        List<Integer> intList = Optional.ofNullable(list1)
+            .map(list -> list.stream()
+                .filter(Main::isNumeric) // ✅ Only keep numeric strings
+                .map(Integer::parseInt)
+                .collect(Collectors.toList()))
+            .orElseGet(ArrayList::new);
+
+        System.out.println(intList); // Output: [1, 3, 4]
+    }
+
+    // ✅ Utility method to check if a string is numeric
+    public static boolean isNumeric(String str) {
+        if (str == null || str.isEmpty()) return false;
+        try {
+            Integer.parseInt(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+}
+Output:[1, 3, 4]
+What this does:
+Filters out invalid inputs like "A", "xyz", etc.
+Only parses valid integers.
+Uses Optional.ofNullable() to handle null safely.
+Uses orElseGet() for lazy fallback to new ArrayList<>().
+
+
+Example:3
+List<String> list1 = Arrays.asList("1", "3", "4");
+List<String> list2 = Arrays.asList("11", "33", "44");
+List<List<String>> listOfLists= new ArrayList<List<String>>();
+		listOfLists.add(list1);
+		listOfLists.add(list2);
+		
+My Code		
+List<Integer> intList2 =Optional.ofNullable(listOfLists).
+.flatMap(listOfList-listOfList.stream().map(list->new ArrayList<>().addAll(list)).collect(Collectors.toList())).orElse(new ArrayList<>());
+
+My Code mistakes
+1).addAll(...) returns boolean value true or false, not a merged List That's a logic bug.
+2).flatMap(...) doesn't work directly with streams here
+flatMap is for flattening nested Optionals, not for stream flattening.
+3)You’re trying to collect(...) inside flatMap — that won't compile.
+
+public class Main {
+    public static void main(String[] args) {
+        List<String> list1 = Arrays.asList("1", "3", "4");
+        List<String> list2 = Arrays.asList("11", "33", "44");
+        List<List<String>> listOfLists = new ArrayList<>();
+        listOfLists.add(list1);
+        listOfLists.add(list2);
+
+        List<Integer> intList = Optional.ofNullable(listOfLists)
+            .map(listOfList -> listOfList.stream() //Converts list List<List<String>> to Stream<Stream<String>>
+                .flatMap(List::stream)  // ✅ flatten nested lists //Converts Stream<Stream<String>> to Stream<String>
+                .map(Integer::parseInt) // ✅ convert to Integer   // Converts Stream<String> to Stream<Integer>
+                .collect(Collectors.toList()))
+            .orElseGet(ArrayList::new);
+
+        System.out.println(intList); // Output: [1, 3, 4, 11, 33, 44]
+    }
+}
+
+
+Explanation:
+.flatMap(List::stream) flattens the nested lists (List<List<String>>) into a single Stream<String>.
+.map(Integer::parseInt) converts each string to an integer.
+Optional.ofNullable(...).map(...).orElseGet(...) safely handles null values.
+
+
+
+Stream.flatMap:-Flattens multiple streams into a single stream.
+List<String> flatList = listOfLists.stream()
+    .flatMap(list -> list.stream())  // flattening
+    .collect(Collectors.toList());  Output: [1, 3, 4, 11, 33, 44]
+Optional.flatMap:- Avoids nested Optionals like Optional<Optional<T>>.
+
+
+
+
+
 

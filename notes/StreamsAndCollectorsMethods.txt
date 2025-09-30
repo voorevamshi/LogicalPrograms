@@ -94,6 +94,8 @@ Map<Integer, List<String>> groupMap = Stream.of("A", "BB", "CCC").collect(Collec
 3)groupingBy Classifier, Supplier<Map>, Downstream Collector
 groupingBy(Function<? super T, ? extends K> classifier,Supplier<M> mapFactory,Collector<? super T, A, D> downstream)
 Map<Integer, List<String>> result = Stream.of("a", "bb", "cc").collect(Collectors.groupingBy(String::length,TreeMap::new,Collectors.toList()));
+
+Common downstream collectors: counting(), summingDouble(), averagingDouble(), maxBy(), minBy(), toList(), toSet()
 ======================partitioningBy method arugments====================
 1)partitioningBy(Predicate<? super T> predicate)
 Map<Boolean, List<Integer>> partitionMap = Stream.of(1, 2, 3, 4).collect(Collectors.partitioningBy(n -> n % 2 == 0));
@@ -146,3 +148,5 @@ void forEach(Consumer<? super T> action) 					Ex:employees.forEach(emp -> System
 void forEach(BiConsumer<? super K, ? super V> action)       Ex:map.forEach((key, value) ->  System.out.println("Key: " + key + ", Value: " + value));
 ===================Stream/IntStream/LongStream/DoubleStream skip method arugments======================
 Stream<T> skip(long n) Ex: Stream.of("A", "B", "C", "D", "E").skip(2).forEach(System.out::println);
+=========================Stream flatMap method arugments======================
+<R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper)

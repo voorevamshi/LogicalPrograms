@@ -14,8 +14,8 @@ public class ReverseNumber implements Logic {
 		int reverseNbr = 0;
 		while (input > 0) {
 			int remainder = input % 10;
-			reverseNbr = reverseNbr * 10 + remainder;
-			input = input / 10;
+			reverseNbr = reverseNbr * 10 + remainder; //9 94 945 9454
+			input = input / 10; //454  45 4 0
 		}
 
 		return reverseNbr;

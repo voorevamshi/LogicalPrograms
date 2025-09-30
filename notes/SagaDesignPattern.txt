@@ -1,3 +1,16 @@
+
+
+
+
+
+We used Spring Boot with Kafka. Each service had a Kafka consumer and producer. The orchestrator was also a Spring Boot service, listening to Kafka topics like order-events, payment-events, delivery-events.
+
+Each event had a type (like OrderCreated, PaymentCompleted, etc.) and the orchestrator would route the saga based on these events. Compensating actions were triggered by publishing rollback events like RefundPayment or CancelDelivery
+
+
+
+📤 Produced by Orchestrator: InitiatePayment, RequestDelivery, RefundPayment, CancelOrder, MarkOrderCompleted
+📥 Listened by Orchestrator: OrderCreated, PaymentCompleted, PaymentFailed, DeliveryCompleted, DeliveryFailed
 --------Why Saga
 We know design pattern gives solution to common problems faced by the developers so what problem is solved by this SAGA design pattern
 The problem started as soon as we moved from Monolithic application to Microservice architecture

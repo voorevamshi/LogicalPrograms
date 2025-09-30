@@ -1,7 +1,18 @@
 package com.vmc.java8;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.IntSummaryStatistics;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class CollectorGroupingMethods {
@@ -52,5 +63,23 @@ public class CollectorGroupingMethods {
             .filter(Objects::nonNull)
             .collect(Collectors.groupingBy(String::length));
         System.out.println("Grouped by Length (With Null Handling): " + groupedByLengthWithNull);
+        
+        System.out.println("===========================");
+        String string="AAABBCC";
+		Map<Character, Long> map = string.chars().mapToObj(c -> (char) c)
+				.collect(Collectors.groupingBy(str -> str,Collectors.counting()));
+		System.out.println(map);
+		int a =string.chars()
+        .mapToObj(c -> (char) c)
+        .collect(Collectors.groupingBy(Function.identity(), LinkedHashMap::new, Collectors.counting()))
+        .entrySet()
+        .stream()
+        .filter(entry -> entry.getValue() == 1L)
+        .map(entry -> entry.getKey())
+        .findFirst()
+        .orElse('0');
+		System.out.println("output:"+a);
+		
+        
     }
 }

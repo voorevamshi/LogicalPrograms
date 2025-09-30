@@ -1,4 +1,4 @@
-package com.vmc.java.paragraph.logic;
+package com.vmc.java.other.logic;
 
 public class TennisScoringEngine {
 

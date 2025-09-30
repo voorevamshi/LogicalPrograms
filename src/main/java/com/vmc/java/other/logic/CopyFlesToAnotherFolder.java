@@ -1,4 +1,4 @@
-package com.vmc.java8;
+package com.vmc.java.other.logic;
 
 import java.io.IOException;
 import java.nio.file.Files;

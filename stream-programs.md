@@ -4,8 +4,6 @@ This repository demonstrates interview-style coding questions using **Java 8 Str
 
 ## 📌 Class Structure
 
-### `Employee`
-```java
 public class Employee {
     private Integer id;
     private String name;

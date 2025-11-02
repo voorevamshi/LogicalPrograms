@@ -1,10 +1,3 @@
-# Java Logical & DateTime Programs
-
-This repository contains multiple Java programs that can be implemented in different ways.  
-The problems are grouped into two categories: **Logical Programs** and **DateTime Programs**.
-
----
-
 ## 📑 Table of Contents
 
 ### Logical Programs
@@ -27,10 +20,9 @@ The problems are grouped into two categories: **Logical Programs** and **DateTim
 17. [maxSum](#17-maxsum)
 18. [findMaxNumberInArray](#18-findmaxnumberinarray)
 19. [maxCountOfVowels](#19-maxcountofvowels)
+20. [Fibonacci](#20-Fibonacci)
+21. [ReverseStringsInSentence](#20-ReverseStringsInSentence)
 
-### DateTime Programs
-20. [CurrentCST_TimeIsBefore3PM](#20-currentcst_timeisbefore3pm)
-21. [CheckUS_BusinessDay](#21-checkus_businessday)
 
 ---
 
@@ -133,21 +125,16 @@ The problems are grouped into two categories: **Logical Programs** and **DateTim
 
 ### 19. maxCountOfVowels
 - Find the maximum count of vowels in a string.  
-- Example: `"ajay is a programer"` → Count vowels.
+- Example: `input: 2,3,2,5,6,7,4,7,4,8 output: 3,5,6` → Count vowels.
 
 ---
-
-## ⏰ DateTime Programs
-
-### 20. CurrentCST_TimeIsBefore3PM
-- Program to check if the current CST (Central Standard Time) is before 3 PM.
+### 20. Fibonacci
+- Fibonacci sequence is a sequence in which each element is the sum of the two elements that precede it
+- Example: 1,2,3,5,8,13,21
 
 ---
-
-### 21. CheckUS_BusinessDay
-- Program to check if the given date is a US Business Day (excluding weekends/holidays).
+### 21. ReverseStringsInSentence
+- Fibonacci sequence is a sequence in which each element is the sum of the two elements that precede it
+- Example: input: Hello world welcome to Java , Output:olleH dlrow emoclew ot avaJ
 
 ---
-
-## 🔼 Back to Top
-[Back to Table of Contents](#-table-of-contents)

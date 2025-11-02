@@ -3,23 +3,28 @@ package com.vmc.java;
 public class LogicalPrograms {
 	public static void main(String[] args) {
 		LogicalPrograms logicalPrograms = new LogicalPrograms();
-		//logicalPrograms.executeLogic("com.vmc.java.ArmstrongNumberChecker"); .
-		//logicalPrograms.executeLogic("com.vmc.java.FindMinimumDenomination"); .
-		//logicalPrograms.executeLogic("com.vmc.java.SecondHighestNumber"); .
-		//logicalPrograms.executeLogic("com.vmc.java.Sorting");
-		//logicalPrograms.executeLogic("com.vmc.java.SortingWithSingleLoop");
-		//logicalPrograms.executeLogic("com.vmc.java.Converging");
-		//logicalPrograms.executeLogic("com.vmc.java.CyclicArray");
-		//logicalPrograms.executeLogic("com.vmc.java.CyclicArray4C7R");
-		//logicalPrograms.executeLogic("com.vmc.java.MaxRepeatedCharacter");
-		//logicalPrograms.executeLogic("com.vmc.java.Occurence");
-		//logicalPrograms.executeLogic("com.vmc.java.ReverseStringsInSentence");
-		//logicalPrograms.executeLogic("com.vmc.java.ReverseNumber");
-		//logicalPrograms.executeLogic("com.vmc.java.Palindrome");
-		//logicalPrograms.executeLogic("com.vmc.java.EmpSalGreter10KAndUpperTheEmpName");
-		//logicalPrograms.executeLogic("com.vmc.java.commonElementsOfArrays");
-		//logicalPrograms.executeLogic("com.vmc.java.smallestNumber");
-		logicalPrograms.executeLogic("com.vmc.java.Fibonacci");
+		//1. logicalPrograms.executeLogic("com.vmc.java.ArmstrongNumberChecker");
+		//2. logicalPrograms.executeLogic("com.vmc.java.FindMinimumDenomination");
+		//3. logicalPrograms.executeLogic("com.vmc.java.SecondHighestNumber");
+		//4. logicalPrograms.executeLogic("com.vmc.java.Sorting");
+		//5. logicalPrograms.executeLogic("com.vmc.java.SortingWithSingleLoop");
+		//6. logicalPrograms.executeLogic("com.vmc.java.Converging");
+		//7. logicalPrograms.executeLogic("com.vmc.java.CyclicArray");
+		//8. logicalPrograms.executeLogic("com.vmc.java.CyclicArray4C7R");
+		//9. logicalPrograms.executeLogic("com.vmc.java.NonRepeatedNumbers");
+		//10. logicalPrograms.executeLogic("com.vmc.java.MaxRepeatedCharacter");
+		//11. logicalPrograms.executeLogic("com.vmc.java.Occurence");
+		//12. logicalPrograms.executeLogic("com.vmc.java.ReverseNumber");
+		//13. logicalPrograms.executeLogic("com.vmc.java.Palindrome");
+		//14. logicalPrograms.executeLogic("com.vmc.java.EmpSalGreter10KAndUpperTheEmpName");
+		//15. logicalPrograms.executeLogic("com.vmc.java.commonElementsOfArrays");
+		//16. logicalPrograms.executeLogic("com.vmc.java.smallestNumber");
+		//17. logicalPrograms.executeLogic("com.vmc.java.MaxSum");
+		//18. logicalPrograms.executeLogic("com.vmc.java.FindMaxNumberInArray");
+		//19. logicalPrograms.executeLogic("com.vmc.java.MaxCountOfVowels");
+		//20. logicalPrograms.executeLogic("com.vmc.java.Fibonacci");
+		//21. logicalPrograms.executeLogic("com.vmc.java.ReverseStringsInSentence");
+
 		
 
 	}

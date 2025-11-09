@@ -1,0 +1,88 @@
+Scenario: The Flash Sale
+You have two core microservices:
+
+Order Service: Responsible for creating customer orders.
+
+Inventory Service: Responsible for managing the stock count of items.
+
+Both services need to interact with the concept of product inventory. A user must not be able to order an item that is out of stock.
+
+The Problem: The Race Condition
+If both services directly read from and write to a shared inventory table in a single database, here's what happens during a flash sale:
+
+User A and User B both click "Buy Now" on the last PlayStation 5 at the exact same time.
+
+The request from User A goes to Order Service Instance 1.
+
+The request from User B goes to Order Service Instance 2.
+
+Both instances perform the same check at the same time:
+
+SELECT quantity FROM inventory WHERE product_id = 'PS5'; // Both read quantity = 1
+
+Both instances decide to proceed because the quantity is 1.
+
+Both instances then try to update the database:
+
+Instance A: UPDATE inventory SET quantity = 0 WHERE product_id = 'PS5';
+
+Instance B: UPDATE inventory SET quantity = 0 WHERE product_id = 'PS5';
+
+The database processes these updates sequentially. One will set it to 0, and the other will also set it to 0. Both orders are successfully created for the same single item. This is a classic race condition. You've now oversold your product, leading to a major customer satisfaction issue.
+
+The Solution: Embracing Eventual Consistency with a "Database per Service" Pattern
+Let's see how we solve this without having them write to the same table. We give each service its own data and use asynchronous events to keep things consistent.
+
+1. Each Service has its own database:
+
+The Inventory Service owns its product_inventory table. It is the sole source of truth for stock levels.
+
+The Order Service owns its orders table. It doesn't store "stock level"; it only knows if an order was successfully created.
+
+2. The Synchronous Check: A "Hold" Mechanism
+When User A clicks "Buy Now", the flow isn't direct. The Order Service must ask the Inventory Service for permission.
+
+Step 1: Order Service receives the request. It does not check the database itself. Instead, it calls a dedicated API on the Inventory Service:
+
+POST /inventory/reserve { "productId": "PS5", "quantity": 1 }
+
+Step 2: The Inventory Service receives this request. It uses a transaction to lock the row for the PS5 in its own database. This is a quick, localized transaction.
+
+It checks if quantity >= 1.
+
+If yes, it places a reservation (or "hold") on the stock. It might do: UPDATE inventory SET quantity = quantity - 1, reserved_stock = reserved_stock + 1 WHERE product_id = 'PS5';
+
+It returns a 200 OK to the Order Service, perhaps with a unique reservationId.
+
+Step 3: Only upon receiving this success response does the Order Service create the order in its own database, marking it as PENDING_PAYMENT and storing the reservationId.
+
+Step 4: User A completes the payment.
+
+3. The Asynchronous Update: Achieving Final Consistency
+Now, we need to finalize the inventory.
+
+Step 5: The Order Service confirms the payment and then publishes an event to a message broker (like Kafka): OrderConfirmed { orderId: 987, reservationId: 'res-123' }
+
+Step 6: The Inventory Service is subscribed to the OrderConfirmed event. It sees this event and consumes it.
+
+Step 7: The Inventory Service processes the event. It uses the reservationId to find the held stock and converts the "reservation" into a permanent deduction:
+
+UPDATE inventory SET reserved_stock = reserved_stock - 1 WHERE reservation_id = 'res-123';
+
+The total stock count is now correctly and permanently decreased. The data is now consistent.
+
+What happens if User B's request comes in?
+While the stock was reserved for User A (between Step 2 and Step 5), the Inventory Service's API /inventory/reserve would have returned a 409 Conflict or 423 Locked error for User B's request, preventing the oversell. The Order Service for User B would then show "Sorry, this item is out of stock."
+
+Summary of the Flow:
+Time	User A Action	Inventory Service (Source of Truth)	Order Service	Communication
+T+0	Clicks Buy	quantity=1, reserved=0	-	Sync API Call: "Reserve 1 PS5?"
+T+1	-	quantity=0, reserved=1 ✅	Creates PENDING order	Response: "Reserved OK"
+T+2	Pays	quantity=0, reserved=1	Marks order as PAID	Async Event: Publishes OrderConfirmed
+T+3	-	Event is processed	-	Async Event: Consumes OrderConfirmed
+T+4	Sees Success	quantity=0, reserved=0 ✅	Order is COMPLETE	Data is now consistent!
+This example shows how you avoid direct, synchronous writes to a shared table and instead use a combination of:
+
+Synchronous API calls for immediate business rules (e.g., "can I sell this?").
+
+Asynchronous events to handle the final state changes and achieve consistency across services without tight coupling.

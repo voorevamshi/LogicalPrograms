@@ -1,0 +1,42 @@
+[
+    {
+        "department": "hr",
+        "gender": "F",
+        "id": 101,
+        "joinDate": "2020-01-10",
+        "name": "Avanthi",
+        "salary": 50000.0
+    },
+    {
+        "department": "it",
+        "gender": "M",
+        "id": 102,
+        "joinDate": "2019-03-25",
+        "name": "Barath",
+        "salary": 60000.0
+    },
+    {
+        "department": "hr",
+        "gender": "M",
+        "id": 103,
+        "joinDate": "2021-07-19",
+        "name": "Chandu",
+        "salary": 40000.0
+    },
+    {
+        "department": "finance",
+        "gender": "F",
+        "id": 104,
+        "joinDate": "2018-11-05",
+        "name": "Deepika",
+        "salary": 70000.0
+    },
+    {
+        "department": "it",
+        "gender": "F",
+        "id": 105,
+        "joinDate": "2022-02-15",
+        "name": "Eve",
+        "salary": 65000.0
+    }
+]

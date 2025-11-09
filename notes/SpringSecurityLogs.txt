@@ -1,0 +1,33 @@
+1)
+When you  add spring-boot-starter-security dependency
+By default It loads UserDetailsServiceAutoConfiguration class and shows default login page and logout page.
+Using generated security password: faf1a7a7-32c2-41a6-b358-de4803350f8a and user name is user
+Request:
+http://localhost:8080/greet
+Referrer Policy:strict-origin-when-cross-origin
+Request Headers:
+cookie:         ext_name=ojplmecpdpgccookcobabopnaifgidhf; JSESSIONID=468A65899F4534E5455A462226E62782
+Response:Welcome to Hello World
+
+o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, CsrfFilter, LogoutFilter, UsernamePasswordAuthenticationFilter, DefaultLoginPageGeneratingFilter, DefaultLogoutPageGeneratingFilter, BasicAuthenticationFilter, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, ExceptionTranslationFilter, AuthorizationFilter
+
+
+2)
+So in order customize user name and password value we need to add properties like below
+spring.security.user.name=vamshi
+spring.security.user.password=vam@123
+3)
+Even after providing valid credentials When we try to add student data database using controller we are going to get 401 Unauthorized. 
+Because As the respoonse is json formatter data spring security is expecting csrf token
+Q) What is csrf-token why it is required here?
+o.s.security.web.FilterChainProxy        : Securing POST /students
+o.s.security.web.csrf.CsrfFilter         : Invalid CSRF token found for http://localhost:8080/students
+o.s.s.w.access.AccessDeniedHandlerImpl   : Responding with 403 status code
+o.s.security.web.FilterChainProxy        : Securing POST /error
+o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+s.w.a.DelegatingAuthenticationEntryPoint : Trying to match using And [Not [RequestHeaderRequestMatcher [expectedHeaderName=X-Requested-With, expectedHeaderValue=XMLHttpRequest]], MediaTypeRequestMatcher [contentNegotiationStrategy=org.springframework.web.accept.ContentNegotiationManager@11bc6c2e, matchingMediaTypes=[application/xhtml+xml, image/*, text/html, text/plain], useEquals=false, ignoredMediaTypes=[*/*]]]
+s.w.a.DelegatingAuthenticationEntryPoint : Trying to match using Or [RequestHeaderRequestMatcher [expectedHeaderName=X-Requested-With, expectedHeaderValue=XMLHttpRequest], And [Not [MediaTypeRequestMatcher [contentNegotiationStrategy=org.springframework.web.accept.ContentNegotiationManager@11bc6c2e, matchingMediaTypes=[text/html], useEquals=false, ignoredMediaTypes=[]]], MediaTypeRequestMatcher [contentNegotiationStrategy=org.springframework.web.accept.ContentNegotiationManager@11bc6c2e, matchingMediaTypes=[application/atom+xml, application/x-www-form-urlencoded, application/json, application/octet-stream, application/xml, multipart/form-data, text/xml], useEquals=false, ignoredMediaTypes=[*/*]]], MediaTypeRequestMatcher [contentNegotiationStrategy=org.springframework.web.accept.ContentNegotiationManager@11bc6c2e, matchingMediaTypes=[*/*], useEquals=true, ignoredMediaTypes=[]]]
+s.w.a.DelegatingAuthenticationEntryPoint : Match found! Executing org.springframework.security.web.authentication.DelegatingAuthenticationEntryPoint@30ecfd12
+s.w.a.DelegatingAuthenticationEntryPoint : Trying to match using RequestHeaderRequestMatcher [expectedHeaderName=X-Requested-With, expectedHeaderValue=XMLHttpRequest]
+s.w.a.DelegatingAuthenticationEntryPoint : No match found. Using default entry point org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint@7ada7b25'
+

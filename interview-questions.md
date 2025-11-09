@@ -152,3 +152,168 @@
 - Why use `@Qualifier`?  
 - Experience with CI/CD, Kubernetes, Docker.  
 - Where to use Singleton
+
+## **Swiss Re**
+
+- Spring annotations.  
+- Optional class methods.  
+- Remove duplicates using recursion (Java 8).  
+- Gender-based employee list.  
+- Input `{0,1,2,9,0,3}` → Output `{1,2,3,9,0,0}`  
+- Read YAML properties.  
+- Singleton creation, reflection issue.  
+- Microservices communication (API security).  
+- Git commands.  
+- Custom exception class.  
+- Remove employee by name.  
+- Enum limitations.  
+- Factory class with example.  
+- JVM architecture (where static objects stored).  
+- Types of DI.  
+
+### Swiss Re 2
+- Sentences list → word grouping by length.  
+- Second highest salary.  
+- DB optimization, indexes, views, materialized view.  
+- Application architecture & load balancing.  
+
+---
+
+## **Nettracker**
+
+- Create Singleton & Immutable class.  
+- Reflection API.  
+- Remove duplicates from huge number string.  
+- Error class priority logic.  
+- Example where AI tools used.  
+
+---
+
+## **Iventy**
+
+- Project architecture.  
+- Authorization techniques (access/refresh tokens).  
+
+---
+
+## **ArcelorMittal**
+
+- List max element (if empty → emptyList).  
+- Map of userId & userName.  
+- Arrow & bind in JS.  
+- Message failure tracking (Kafka/Queue).  
+- Disaster management.  
+
+---
+
+## **Critical River**
+
+- Microservice architecture.  
+- Service registry.  
+- Design patterns used (Gateway, Circuit).  
+- Exception handling.  
+- Java 17 features.  
+- Multi-storage design (S3, SharePoint, Azure).  
+- API Gateway, security, authentication, DB connection.  
+
+---
+
+## **Harish Questions**
+
+- Dept-wise employee list, count, highest, second highest salary.  
+- Dept with most employees → `map.entrySet().stream().max(...)`  
+- Gender-based avg salary (Hyd, salary>10k).  
+- Sort list by id/name dynamically.  
+- Common employees between lists (Hyd, salary>10k).  
+- First non-repeated number.  
+- Capitalize first letter of first word.  
+- Find 2nd max from array (no predefined methods).  
+- Merge two sorted arrays.  
+- Retrieve Telangana employees.  
+- Common elements (O(n log n) approach).  
+- Group employees by dept, find highest salary.  
+- Gender-based avg salary using streams.  
+- `ClassCastException` example (`B b1=(B)new A()` fails).  
+
+### SQL Queries
+- Count employees dept-wise.  
+- Max salary dept-wise.  
+
+---
+
+## **IBM (9th Aug 2024)**
+
+- Immutable Employee with mutable Address.  
+- Print even/odd in single loop (large list).  
+- Connect two DBs in microservice (MySQL + Oracle/MongoDB).  
+- Handle transactions across microservices (Saga).  
+- Microservice design patterns: Gateway, Saga, Circuit Breaker, Aggregator.  
+- Find duplicates using Java 8.  
+- Find Kth largest element.  
+- Implement Queue using Stack.  
+
+---
+
+## **TCS**
+
+- Filter employees whose city starts with “P”.  
+- Shallow vs deep cloning.  
+- Volatile vs transient.  
+- Identify valid lambda expressions.  
+- Global exception handling.  
+- DB config removed — use externalization.  
+- Lazy bean loading.  
+- Client-specific implementation.  
+- Remove duplicate logic across classes.  
+- Project architecture explanation.  
+
+---
+
+## **Deloitte (28-May-2024)**
+
+- Remove 2 from list `[1,2,2,3,2,3]`.  
+- List of lists → employees with salary > 10,000.  
+- Difference between `call()` and `run()`.  
+- Idempotent vs non-idempotent.  
+- Vowel substring problem (“aaeiouxa”).  
+
+---
+
+## **Infosys (26-May-2024)**
+
+- Java Stream API: find avg salary (before 2010, by dept, >60k).  
+- `map()` vs `flatMap()`.  
+- SAML Authentication.  
+- Design patterns used.  
+- Stateless vs stateful services.  
+- Spring Reactive approach.  
+- Multi-service failure (B fails).  
+- Create deadlock.  
+
+---
+
+## **GlobalLogic (11-May-2024)**
+
+- Decomposition, visitor, circuit patterns.  
+- Rollback between order & inventory microservices.  
+- Distributed transaction across banks.  
+- CompletableFuture, Atomic vars, CountDownLatch.  
+- Memory & hash changes in Java 8.  
+
+---
+
+## **Other Common Topics**
+
+- `@Controller` vs `@RestController`.  
+- Spring MVC Architecture.  
+- Swagger usage.  
+- Microservice Security.  
+- Stream API operators.  
+- String vs StringBuilder vs StringBuffer.  
+- `ConcurrentModificationException`.  
+- Optional class.  
+- DB optimization (indexes, joins, etc.).  
+- Spring Actuator, Eureka, SOA vs Microservice.  
+- SOLID Principles, Object creation ways, Exception handling.  
+
+---

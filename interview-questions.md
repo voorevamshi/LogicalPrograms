@@ -91,8 +91,8 @@
 
 ## **JP Morgan**
 
-- Input: `{"getCurrency","getAccountName","getLongAccountName"}`  
-  → Output: `{"Currency","Account_Name","Long_Account_Name"}`  
+- Input: `{"getCurrency","getAccountName","getLongAccountName","getSWIFTCode","getTraceID"}`  
+  → Output: `{"Currency","Account_Name","Long_Account_Name","SWIFT_Code","Trace_ID"}`  
 - Kafka scaling — from 1K to 1L msgs — what to consider?  
 - Which API Gateway are you using?  
 

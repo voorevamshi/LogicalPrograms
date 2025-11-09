@@ -4,7 +4,7 @@
 1. [ArmstrongNumberChecker](#1-armstrongnumberchecker)
 2. [FindMinimumDenomination](#2-findminimumdenomination)
 3. [SecondHighestNumber](#3-secondhighestnumber)
-4. [Sorting (0,1,2 array sorting)](#4-sorting-012-array-sorting)
+4. [Sorting (0,1,2 array sorting)](#sorting-012-array-sorting)
 5. [SortingWithSingleLoop](#5-sortingwithsingleloop)
 6. [Converging](#6-converging)
 7. [CyclicArray](#7-cyclicarray)
@@ -20,8 +20,9 @@
 17. [maxSum](#17-maxsum)
 18. [findMaxNumberInArray](#18-findmaxnumberinarray)
 19. [maxCountOfVowels](#19-maxcountofvowels)
-20. [Fibonacci](#20-Fibonacci)
-21. [ReverseStringsInSentence](#20-ReverseStringsInSentence)
+20. [Fibonacci](#fibonacci)
+21. [ReverseStringsInSentence](#reversestringsinsentence)
+
 
 
 ---
@@ -45,7 +46,7 @@
 
 ---
 
-### 4. Sorting (0,1,2 array sorting)
+### sorting-012-array-sorting
 - Sort an array containing only `0, 1, 2`.
 
 ---
@@ -128,12 +129,12 @@
 - Example: `input: 2,3,2,5,6,7,4,7,4,8 output: 3,5,6` → Count vowels.
 
 ---
-### 20. Fibonacci
+### fibonacci
 - Fibonacci sequence is a sequence in which each element is the sum of the two elements that precede it
 - Example: 1,2,3,5,8,13,21
 
 ---
-### 21. ReverseStringsInSentence
+### reversestringsinsentence
 - Fibonacci sequence is a sequence in which each element is the sum of the two elements that precede it
 - Example: input: Hello world welcome to Java , Output:olleH dlrow emoclew ot avaJ
 

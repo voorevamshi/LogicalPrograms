@@ -1,4 +1,4 @@
-package com.interview;
+package com.vmc.interview;
 
 public interface Logic {
 

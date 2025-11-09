@@ -1,4 +1,4 @@
-package com.interview;
+package com.vmc.interview;
 
 public class LogicalPrograms {
 	public static void main(String[] args) {

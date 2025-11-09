@@ -1,4 +1,4 @@
-package com.interview.lloyds;
+package com.vmc.interview.lloyds;
 
 import java.util.HashMap;
 import java.util.Map;

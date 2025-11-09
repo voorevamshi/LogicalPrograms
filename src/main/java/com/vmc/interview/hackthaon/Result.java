@@ -1,4 +1,4 @@
-package com.interview.hackthaon;
+package com.vmc.interview.hackthaon;
 
 class Result {
 

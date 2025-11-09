@@ -1,4 +1,4 @@
-package com.interview.hackthaon;
+package com.vmc.interview.hackthaon;
 
 import java.io.BufferedReader;
 import java.io.IOException;

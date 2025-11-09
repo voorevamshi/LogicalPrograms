@@ -1,13 +1,13 @@
-package com.interview.infosys;
+package com.vmc.interview.infosys;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.interview.Employee;
-import com.interview.EmployeeUtility;
-import com.interview.Logic;
+import com.vmc.interview.Employee;
+import com.vmc.interview.EmployeeUtility;
+import com.vmc.interview.Logic;
 
 public class AverageSalaryGroupByDepartment implements Logic {
 

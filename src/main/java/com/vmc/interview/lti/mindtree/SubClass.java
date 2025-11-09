@@ -1,4 +1,4 @@
-package com.interview.lti.mindtree;
+package com.vmc.interview.lti.mindtree;
 
 import java.io.Externalizable;
 import java.io.IOException;

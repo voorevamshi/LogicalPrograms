@@ -1,10 +1,10 @@
-package com.interview.deloitte;
+package com.vmc.interview.deloitte;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.interview.Logic;
+import com.vmc.interview.Logic;
 
 public class RemoveAnElement implements Logic {
 

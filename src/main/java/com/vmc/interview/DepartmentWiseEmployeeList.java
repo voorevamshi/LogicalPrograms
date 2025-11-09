@@ -1,4 +1,4 @@
-package com.interview;
+package com.vmc.interview;
 
 import java.util.Arrays;
 import java.util.Comparator;

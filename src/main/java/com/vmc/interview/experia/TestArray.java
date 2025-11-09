@@ -1,4 +1,4 @@
-package com.interview.experia;
+package com.vmc.interview.experia;
 
 import java.util.Arrays;
 

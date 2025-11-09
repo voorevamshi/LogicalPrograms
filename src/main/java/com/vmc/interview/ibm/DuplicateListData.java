@@ -1,4 +1,4 @@
-package com.interview.ibm;
+package com.vmc.interview.ibm;
 
 import java.util.Arrays;
 import java.util.List;

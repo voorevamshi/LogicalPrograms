@@ -1,12 +1,12 @@
-package com.interview.deloitte;
+package com.vmc.interview.deloitte;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.interview.Employee;
-import com.interview.EmployeeUtility;
-import com.interview.Logic;
+import com.vmc.interview.Employee;
+import com.vmc.interview.EmployeeUtility;
+import com.vmc.interview.Logic;
 
 public class ListOfListToList implements Logic {
 

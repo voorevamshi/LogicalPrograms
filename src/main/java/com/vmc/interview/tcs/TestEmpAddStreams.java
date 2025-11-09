@@ -1,4 +1,4 @@
-package com.interview.tcs;
+package com.vmc.interview.tcs;
 
 import java.util.Comparator;
 import java.util.List;
@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.interview.EmployeeReal;
-import com.interview.EmployeeUtility;
+import com.vmc.interview.EmployeeReal;
+import com.vmc.interview.EmployeeUtility;
 
 public class TestEmpAddStreams {
 

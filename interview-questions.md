@@ -1,71 +1,70 @@
 # 🧩 INTERVIEW QUESTIONS – COMPANY-WISE
 
----
-
 ## Netcracker
-public ErrorInfo(String code, Integer priority)  
-List<ErrorInfo> errorsConfiguration = Arrays.asList( new ErrorInfo("E-1334", 4), new ErrorInfo("E-7264", 2), new ErrorInfo("E-7264", 2), new ErrorInfo("E-2234", 1), new ErrorInfo("E-9134", 3), new ErrorInfo("E-7834", 5) );  
-List<String> errorsFromServer = Arrays.asList("E-7834", "E-7264", "S-3364");  
-Identifying the highest priority error received from the server  
-Saga design pattern, Circuit design pattern  
-How to handle exceptions  
-Explain transaction  
-Java 17 features and what is sealed class  
+- public ErrorInfo(String code, Integer priority)
+- List<ErrorInfo> errorsConfiguration = Arrays.asList( new ErrorInfo("E-1334", 4), new ErrorInfo("E-7264", 2), new ErrorInfo("E-7264", 2), new ErrorInfo("E-2234", 1), new ErrorInfo("E-9134", 3), new ErrorInfo("E-7834", 5) );
+  List<String> errorsFromServer = Arrays.asList("E-7834", "E-7264", "S-3364");
+  Identifying the highest priority error received from the server
+- Saga design pattern, Circuit design pattern
+- How to handle exceptions
+- Explain transaction
+- Java 17 features and what is sealed class
 
 ## Sutherland 2
-What are OOPS concepts?  
-Kafka you have worked on right, what is Kafka?  
-Singleton design pattern?  
-AWS Lambda  
-Roles and responsibilities  
-Spring AOP for monitoring, Spring connecting database? What is lazy loading in Hibernate  
-Difference between HashMap and HashSet?  
+- What are OOPS concepts?
+- Kafka you have worked on right, what is Kafka?
+- Singleton design pattern?
+- AWS Lambda
+- Roles and responsibilities
+- Spring AOP for monitoring, Spring connecting database? What is lazy loading in Hibernate
+- Difference between HashMap and HashSet?
 
 ## Mphish
-String name = "vamshi" print even index and combine them output "vmh" using Java 8 streams  
-Java 17 features  
-Java 8 features. Can we use functional interfaces without lambda?  
-Does Set allow null values?  
+- String name = "vamshi" print even index and combine them output "vmh" using Java 8 streams
+- Java 17 features
+- Java 8 features. Can we use functional interfaces without lambda?
+- Does Set allow null values?
 
 ## Sutherland 1
-SOLID principles  
-ACID principles  
-Other than Propagation REQUIRED anything you have used?  
-Save flush after if the exception comes will data save in DB  
-Isolation rules  
-Design patterns  
-How Spring Boot Auto Configuration works? Did you look into the Auto Configuration classes?  
-Can the stack be stretched? Can Heap be stretched? If exceeds both sizes what are the errors you will get?  
-Stack is which data structure?  
-How is the HIKARI pool created in Spring as its starter project?  
-Can we create multiple RestTemplates, one with 1 minute response time, another with 2 minute response time?  
-When to use LinkedList, ArrayList. Do you have idea on Queue, Stack  
-Runnable vs Callable  
-AWS S3 service how you connect from application & what is RDS  
-Eureka vs Kubernetes  
-What are the things we can do with Spring Cloud Gateway?  
-RestTemplate vs GraphQL  
-DOM related question  
-Explain AOP where you have used in your project  
+- SOLID principles
+- ACID principles
+- Other than Propagation REQUIRED anything you have used?
+- Save flush after if the exception comes will data save in DB
+- Isolation rules
+- Design patterns
+- How Spring Boot Auto Configuration works? Did you look into the Auto Configuration classes?
+- Can the stack be stretched? Can Heap be stretched? If exceeds both sizes what are the errors you will get?
+- Stack is which data structure?
+- How is the HIKARI pool created in Spring as its starter project?
+- Can we create multiple RestTemplates, one with 1 minute response time, another with 2 minute response time?
+- When to use LinkedList, ArrayList. Do you have idea on Queue, Stack
+- Runnable vs Callable
+- AWS S3 service how you connect from application & what is RDS
+- Eureka vs Kubernetes
+- What are the things we can do with Spring Cloud Gateway?
+- RestTemplate vs GraphQL
+- DOM related question
+- Explain AOP where you have used in your project
 
 ## Principal Global Services – Round 1
-Design ecommerce application used by 10 lakh users  
-The department has a list of employees in each department. I need the second highest salary. If any department has only 1 employee that department I don’t need  
-Same department wise second highest salary using database query  
+- Design ecommerce application used by 10 lakh users
+- The department has a list of employees in each department. I need the second highest salary. If any department has only 1 employee that department I don’t need
+- Same department wise second highest salary using database query
 
 ## Principal Global Services – Round 2
-Explain project and what are the challenging tasks you worked on  
-Explain which production defect you faced difficulty for (example: batch job took cached data)  
-Is it that the batch needs to pick current time -5 min is it correct? Have you discussed it with the architecture team?  
-Design discussions happen with the architecture team. If yes what you will discuss  
-If you become team lead, what metrics improved your team will show?  
+- Explain project and what are the challenging tasks you worked on
+- Explain which production defect you faced difficulty for (example: batch job took cached data)
+- Is it that the batch needs to pick current time -5 min is it correct? Have you discussed it with the architecture team?
+- Design discussions happen with the architecture team. If yes what you will discuss
+- If you become team lead, what metrics improved your team will show?
 
 ## Candescent
-Design code for YouTube views 5 billion you want to track  
-In a transaction I have get, delete, update how to maintain without stale data (take example of reset function)  
-How are you doing security if your token expires every 24 hours?  
-How do you trace when you have multiple microservices?  
-How you will do code review. You will not clone the code and check, right?  
+- Design code for YouTube views 5 billion you want to track
+- In a transaction I have get, delete, update how to maintain without stale data (take example of reset function)
+- How are you doing security if your token expires every 24 hours?
+- How do you trace when you have multiple microservices?
+- How you will do code review. You will not clone the code and check, right?
+
 
 ## **Experian**
 

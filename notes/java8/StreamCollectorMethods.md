@@ -226,7 +226,6 @@ _Common downstream collectors: `counting()`, `summingDouble()`, `averagingDouble
 
 ##  List sort method arguments 
 
-Java
 
 ```
 List<String> names  Arrays.asList("Charlie", "Alice", "Bob");
@@ -268,4 +267,48 @@ names.sort(Comparator.comparing(Employee::getSalary)); // Custom Object sorting
     _Ex: `Stream.of("A", "B", "C", "D", "E").skip(2).forEach(System.out::println);`_
     
 -   **flatMap:** `<R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper)`
+### map() vs flatMap()
+
+| Feature | map(Function<T, R>) | flatMap(Function<T, Stream<R>>) |
+| :--- | :--- | :--- |
+| **Mapping Logic** | 1-to-1 (One input -> One output) | 1-to-Many (One input -> Multiple outputs) |
+| **Output Type** | `Stream<R>` | `Stream<R>` (Flattened) |
+| **Structure** | Preserves original structure | "Flattens" nested structures |
+| **Analogy** | Like changing the color of every ball in a box. | Like opening several small boxes and pouring all contents into one big box. |
+
+#### Usage Examples
+- **map():** `stream.map(String::toUpperCase)` — Transforms `"hello"` to `"HELLO"`.
+- **flatMap():** `stream.flatMap(list -> list.stream())` — Transforms `[[1,2], [3,4]]` to `[1, 2, 3, 4]`.
+```
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class FlatMapExample {
+    public static void main(String[] args) {
+        List<Post> posts = Arrays.asList(
+            new Post("Java Basics", Arrays.asList("java", "programming")),
+            new Post("Stream API", Arrays.asList("java", "streams", "functional")),
+            new Post("React Intro", Arrays.asList("js", "react"))
+        );
+
+        // Using flatMap to "drill down" into the tags list
+        List<String> allTags = posts.stream()
+            .flatMap(post -> post.getTags().stream()) // Converts 1 Post to a Stream of Tags
+            .map(String::toUpperCase)                // Optional: transform tags
+            .distinct()                               // Remove duplicates
+            .collect(Collectors.toList());
+
+        System.out.println(allTags); 
+        // Output: [JAVA, PROGRAMMING, STREAMS, FUNCTIONAL, JS, REACT]
+    }
+}
+
+class Post {
+    String title;
+    List<String> tags;
+    Post(String title, List<String> tags) { this.title = title; this.tags = tags; }
+    List<String> getTags() { return tags; }
+}
+```
 

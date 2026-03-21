@@ -1,3 +1,8 @@
+## Comparator methods
+```
+employees.stream().sorted(Comparator.comparing(Employee::getName,Comparator.nullsFirst(Comparator.naturalOrder()))
+```
+
 | Method | Description | Example Snippet |
 | :--- | :--- | :--- |
 | **comparing** | Sorts by a specific object field | `Comparator.comparing(Employee::getName)` |

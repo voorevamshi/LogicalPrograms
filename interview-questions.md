@@ -1,5 +1,275 @@
 # 🧩 INTERVIEW QUESTIONS – COMPANY-WISE
 
+## 🏢 Cubic
+
+-   What is **multi-catch** in Java?
+-   Does `ConcurrentHashMap` allow `null` keys or values? Why?
+-   If an AWS S3 file is loading slowly, how would you troubleshoot and fix it?
+-   What is the **Metaspace** area in JVM? What is its purpose?
+-   When do HTTP **401** and **403** errors occur in REST APIs?
+-   What is **ETag** in REST APIs?
+-   What is **content negotiation** in REST APIs?
+-   What are different **functional interfaces** in Java?
+-   What is **lazy loading**?
+-   Can we place `IOException` before `FileNotFoundException` in a catch block? Why/why not?
+-   What is the difference between **Git merge** and **Git rebase**?
+
+----------
+
+## 🏢 Incdo
+
+-   Given input `{10,20,11,33,25,18}`, output sequences starting with 1-digit numbers → `{10,11,18}`
+-   SQL: From a **family table (ID, name, parent_id)**, retrieve names where `parent_id` is NOT NULL
+-   How do you implement **authentication** for your APIs?
+
+----------
+
+## 🏢 American Airlines
+
+-   Have you created **Dockerfiles**? Explain.
+-   Move all zeros to the end without extra space:  
+    Input: `[2,0,9,5,0,6]` → Output: `[2,9,5,6,0,0]`
+-   What is a **Spring Cloud Config Server**?
+-   How does Spring decide which `@ExceptionHandler` method to invoke?
+
+----------
+
+## 🏢 Altimetrics
+
+-   Implement **One-to-Many** and **Many-to-One** relationships using JPA
+-   SQL: Find **department-wise highest salary**
+-   What is a **rate limiter**? Which algorithms are used?
+-   How do you create and manage a **cluster**?
+
+----------
+
+## 🏢 Infor
+
+-   What is `@ConditionalOnProperty`?
+-   Difference between `@Bean`, `@Primary`, and `@Qualifier`
+-   How do you test exceptions in **unit testing**?
+-   In Redis, how do you configure **TTL (time-to-live)** for data?
+-   What is the **N+1 query problem**? How do you solve it?
+-   Can we use `synchronized` on a constructor?
+-   Stock profit problem: `{7,1,5,3,6,4}` → find max profit
+-   API optimization: If an update API takes 3 seconds for 1000 fields, how will you improve performance?
+-   Why do we need **client-side validation**?
+-   Why are HTTP **100-series** rarely used? What does **300-series** do?
+
+----------
+
+## 🏢 Mphasis (Round 1)
+
+-   Convert array using streams:  
+    `{"a","b","1","0","c"} → {"1","1","1","0","1"}`
+-   How to make a class **immutable** (without StringBuilder/Buffer)?
+-   How do two microservices communicate?
+-   What are core **microservices components**?
+-   How do you connect to AWS S3 using SDK (`S3Client`)?
+-   How does **EKS** use EC2 internally?
+-   Why does `Object` class have `wait()`, `notify()`, `notifyAll()`?
+-   Why should HashMap keys be immutable?
+-   Java 17 & 18 features
+-   Why can't **Entity classes** be replaced with **records**?
+-   How does Kafka maintain **ordering**?
+-   Why do we need a **Dead Letter Topic (DLT)**?
+
+----------
+
+## 🏢 Mphasis (Round 2)
+
+-   Longest palindromic substring: `"babad"` → `"bab"` / `"aba"`
+-   Microservice communication approaches
+-   Explain **SOLID principles**
+-   Rate limiting techniques
+
+----------
+
+## 🏢 Aeris
+
+-   Explain **transaction isolation levels**
+-   Design fallback: If Kafka publish fails, send data to RabbitMQ
+-   How to ensure **zero downtime deployment** (OpenShift → AWS EKS)?
+
+----------
+
+## 🏢 TCS
+
+-   Ways to read Spring configuration properties
+-   How do you maintain **data integrity** in transactions?
+-   How do you maintain consistency in **MongoDB**?
+-   How do you alter schema in MongoDB?
+-   How to build **fault-tolerant systems**?
+-   How do you connect AWS services (S3, SQS, EC2)?
+-   Handling JSON in property files
+-   JUnit annotations: `@BeforeClass`, `@AfterClass`, `@Before`, `@After`
+
+----------
+
+## 🏢 GFT
+
+-   What is an **ephemeral environment**?
+-   What is **Cassandra**?
+-   What is a **time-series database**?
+-   Explain **TDD (Test Driven Development)**
+-   Automation using **Cucumber**
+-   Kubernetes / EKS commands
+-   Kafka architecture
+-   Reasons for **consumer lag in Kafka**
+-   Best database for **unstructured data + fast aggregation**
+
+----------
+
+## 🏢 Sapient
+
+-   Which **design patterns** fit which use cases?
+-   Design pattern for a **vending machine**
+-   Which sorting algorithms to use in different scenarios?
+-   Which AWS service is **cost-effective** for a given requirement?
+-   `new Boolean("hello")` → why is it `false`?
+
+----------
+
+## 🏢 Deloitte
+
+-   First repeated character in string `"vamshiamsh"`
+-   Separate alphabets and numbers: `"abc123d2e1f2j8k99"`
+-   Jenkins pipeline experience
+-   Steps in Jenkins pipeline
+-   Monitoring tools (Prometheus, Grafana, etc.)
+-   Docker experience
+-   Handling **production issues**
+-   Microservice communication patterns
+
+----------
+
+## 🏢 Cognizant
+
+-   Have you configured **CodeQL / SonarQube**?
+-   Explain **project architecture** (UI → Gateway → Services)
+-   How do you handle **security vulnerabilities**?
+-   Kafka implementation in your project
+-   What happens internally in `@Transactional`?
+-   Have you created architecture diagrams (UML, ER, etc.)?
+
+----------
+
+## 🏢 HighRadius
+
+-   Move zeros to right using sorting: `[5,3,0,8,0,4,0,2]`
+-   Types of `@Transactional` propagation
+-   Binary tree problems
+-   Redesign your project architecture
+-   Explain **Adapter / Strategy design patterns**
+
+----------
+
+## 🏢 Capgemini
+
+-   How do you implement **authorization**?
+-   Difference between **Access Token, Bearer Token, Refresh Token**
+-   How to reduce **Spring Boot startup time**?
+
+----------
+
+## 🏢 EPAM
+
+-   Group words by first character:  
+    `{apple, ball, cat, bubbly, chinni}` → `{a=[apple], b=[ball,bubbly], c=[cat,chinni]}`
+-   Sliding window sum: `{1,2,3,4,5}`, k=3 → `{1,3,6,9,12}`
+
+----------
+
+## 🏢 LTIMindtree
+
+-   Design a **Spring Boot microservice** to ingest transactions asynchronously with:
+    -   Backpressure handling
+    -   Fault tolerance
+-   How to migrate database schema
+
+----------
+
+## 🏢 EY
+
+### Round 1
+
+-   How to connect AWS S3 (configuration)
+-   How to resolve **circular dependency** in Spring
+-   Validation approaches in projects
+-   `@Transactional(readOnly = true)` usage
+-   DynamoDB basics
+-   SQS visibility timeout vs processing time
+-   Experience with **Generative AI / Agentic AI**
+
+### Round 2
+
+-   Handling API failures between services
+-   AWS services overview
+-   AWS Lambda scheduling
+-   Write a Dockerfile
+-   CI/CD tools (Jenkins pipelines)
+
+----------
+
+## 🏢 Warner Bros Discovery
+
+-   Generate permutations in lexicographical order  
+    Input: `123` → Output: `123,132,213,231,312,321`
+
+----------
+
+## 🏢 Evernorth
+
+-   Longest substring problem: `"abcadefbde"`
+-   Can multiple consumers read from the same Kafka partition?
+-   What happens when a token expires?
+-   Java 17 features
+-   Reduce application startup time
+-   Is **Cluster inside VPC or VPC inside Cluster**?
+-   What is IAM?
+-   Microservices communication in Kubernetes
+
+----------
+
+## 🏢 T-Mobile
+
+-   Enterprise-level logging strategies
+-   Print even/odd arrays using threads
+-   Prevent cloning in Singleton
+-   Immutable class design (Employee → Department)
+-   Minimum jumps problem
+
+----------
+
+## 🏢 JPMorgan
+
+-   Sort array `{1,2,1,2,1}` with complexity analysis
+-   Design class hierarchy:
+    -   Smartphone → OS (Android, iOS, Windows)
+    -   Brands (Vivo, MI, Apple)
+
+----------
+
+## 🏢 Swiss Re
+
+-   Shortest path / optimal path problems
+-   Design an **E-commerce system**:
+    -   User registration/login
+    -   Product catalog
+    -   Inventory
+    -   Order management
+
+----------
+
+## 🏢 General (Repeated TCS / Others)
+
+-   Why Kafka over RabbitMQ?
+-   Does Kafka support multiple message formats?
+-   What is **Avro schema**?
+-   Different HTTP methods
+-   Why use MongoDB?
+-   API versioning strategies
+
 ## Netcracker
 - public ErrorInfo(String code, Integer priority)
 - List<ErrorInfo> errorsConfiguration = Arrays.asList( new ErrorInfo("E-1334", 4), new ErrorInfo("E-7264", 2), new ErrorInfo("E-7264", 2), new ErrorInfo("E-2234", 1), new ErrorInfo("E-9134", 3), new ErrorInfo("E-7834", 5) );

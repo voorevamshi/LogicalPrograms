@@ -2,6 +2,7 @@ package com.vmc.interview.lloyds;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class KeyValueViceVersa {
@@ -14,9 +15,16 @@ public class KeyValueViceVersa {
 		map.put("prashanth", 33);
 		map.put("suresh", 33);
 		map.put("phani", 33);
-		Map<Object, Object> resultMap = map.entrySet().stream()
-				.collect(Collectors.toMap(key -> key.getValue(), key -> key.getKey(), (key, value) -> key + ":" + value));
+		
+		/*
+		 * map.entrySet().stream().collect(Collectors.toMap(Entry::getKey,
+		 * Entry::getValue, (key,value)-> value)); System.out.println(map);
+		 */
+
+		Map<Integer, String> resultMap = map.entrySet().stream().collect(
+				Collectors.toMap(key -> key.getValue(), key -> key.getKey(), (key, value) -> key + "," + value));
 		System.out.println(resultMap);
+		 
 	}
 
 }

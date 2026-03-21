@@ -1,8 +1,8 @@
-package com.vmc.netcracker;
+package com.vmc.interview.netcracker;
 
 import java.util.Objects;
 
-public class ErrorInfo {
+public class Error {
 
 	String code;
 	Integer priority;
@@ -23,7 +23,7 @@ public class ErrorInfo {
 		this.priority = priority;
 	}
 
-	public ErrorInfo(String code, Integer priority) {
+	public Error(String code, Integer priority) {
 		super();
 		this.code = code;
 		this.priority = priority;
@@ -50,4 +50,5 @@ public class ErrorInfo {
 		Error other = (Error) obj;
 		return Objects.equals(code, other.code) && Objects.equals(priority, other.priority);
 	}
+
 }

@@ -223,5 +223,17 @@ public class Utility {
 		System.out.println(jsonString);
 		return jsonString;
 	}
+	public static String getMessageWithJsonString(String message, Object obj) {
+		String jsonString = null;
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			jsonString = objectMapper.writeValueAsString(obj);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(message+":"+jsonString);
+		return jsonString;
+	}
 
 }

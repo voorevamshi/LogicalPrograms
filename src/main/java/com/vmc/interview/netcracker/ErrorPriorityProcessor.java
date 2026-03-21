@@ -1,4 +1,4 @@
-package com.vmc.netcracker;
+package com.vmc.interview.netcracker;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -36,12 +36,12 @@ public class ErrorPriorityProcessor {
                 new ErrorInfo("E-7264", 2),
                 new ErrorInfo("E-7264", 2),
                 new ErrorInfo("E-2234", 1),
-                new ErrorInfo("E-9134", 3),
+                new ErrorInfo("E-9134", 2),
                 new ErrorInfo("E-7834", 5)
         );
 
         List<String> errorsFromServer =
-                Arrays.asList("E-7834", "E-7264", "S-3364");
+                Arrays.asList("E-7834", "E-7264", "E-9134");
 
         Optional<ErrorInfo> highestPriority =
                 findHighestPriorityError(errorsConfiguration, errorsFromServer);

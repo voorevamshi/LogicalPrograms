@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.DoubleSummaryStatistics;
 import java.util.IntSummaryStatistics;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.LongSummaryStatistics;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class CollectorMethods {
         System.out.println("Map with Three arguments: " + map2);
         
         //TreeMap, sorted by key (v1, v2) -> v1  first value, and (v1, v2) -> v2 returns last value
-        Map<Integer, String> map3 = Stream.of("A", "DD", "FF","CC","EEE").collect(Collectors.toMap(String::length, Function.identity(),(v1, v2) -> v1 , TreeMap::new));
+        Map<Integer, String> map3 = Stream.of("A", "DD", "FF","CC","EEE").collect(Collectors.toMap(String::length, Function.identity(),(v1, v2) -> v1 ));
         System.out.println("Map with Four arguments: " + map3);
         
         Map<String,Double> map4 = Utility.getEmpDepts().stream().collect(Collectors.toMap(EmpDept::getName,EmpDept::getSalary));
@@ -71,7 +72,7 @@ public class CollectorMethods {
         System.out.println("Group Count Map: " + countMap);
         
         //groupingBy Classifier, Supplier<Map>, Downstream Collector
-        Map<Integer, List<String>> groupMapWithSupplier = Stream.of("a", "bb", "cc").collect(Collectors.groupingBy(String::length,TreeMap::new,Collectors.toList()));
+        Map<Integer, List<String>> groupMapWithSupplier = Stream.of("a", "bb", "cc").collect(Collectors.groupingBy(String::length,Collectors.toList()));
         System.out.println("Group Count Map: " + groupMapWithSupplier);
         
         

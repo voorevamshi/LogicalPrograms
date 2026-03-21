@@ -1,31 +1,7 @@
 # Java Stream and Collectors Reference
 
 ### Stream – Interface
-
-Provides a sequence of elements supporting functional-style operations (e.g. filter, map, reduce, etc.)
-
-`public interface Stream<T> extends BaseStream<T, Stream<T>> {...}`
-
 ### Collectors – Utility and final Class
-
-Provides static factory methods for common collectors used with `Stream.collect(...)`
-
-Java
-
-```
-String input  "This is java";
-List<Integer> intList  input.chars().mapToObj(c -> c - '0').toList();
-
-```
-
-**input.chars():** This method converts the input string into an `IntStream`, where each element in the stream represents the Unicode value of a character in the string. For example, if input is "153", the stream will contain the values `[49, 53, 51]` (the Unicode values of '1', '5', and '3').
-
-**.mapToObj(c -> c - '0'):**
-
-The `mapToObj` function is used to transform each Unicode value in the stream into its corresponding integer representation. The expression `c - '0'` works because the Unicode value of '0' is subtracted from the Unicode value of the character `c`, effectively converting the character to its numeric value. For example, `'1' - '0'` results in 1, `'5' - '0'` results in 5, and so on.
-
-----------
-
 ##  Stream methods 
 
 -   **Stream<T> mapToObj(IntFunction<R>):** Converts each element of the stream into an object of a different type.

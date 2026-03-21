@@ -277,8 +277,10 @@ names.sort(Comparator.comparing(Employee::getSalary)); // Custom Object sorting
 | **Analogy** | Like changing the color of every ball in a box. | Like opening several small boxes and pouring all contents into one big box. |
 
 #### Usage Examples
-- **map():** `stream.map(String::toUpperCase)` — Transforms `"hello"` to `"HELLO"`.
-- **flatMap():** `stream.flatMap(list -> list.stream())` — Transforms `[[1,2], [3,4]]` to `[1, 2, 3, 4]`.
+ 
+- **map** transforms each element into exactly one other element, **map():** `stream.map(String::toUpperCase)` — Transforms `"hello"` to `"HELLO"`
+
+- **flatMap** transforms each element into a stream of elements and then "flattens" those streams into a single combined stream.**flatMap():** `stream.flatMap(list -> list.stream())` — Transforms `[[1,2], [3,4]]` to `[1, 2, 3, 4]`.
 ```
 
 import java.util.*;

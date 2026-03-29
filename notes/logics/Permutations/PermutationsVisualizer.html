@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backtracking Visualizer - Permutations</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;600&display=swap');
+
+        * { box-sizing: border-box; }
+        body { 
+            margin: 0; padding: 20px; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); 
+            color: #f1f5f9; 
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 300px; /* Code | Visuals | Stack */
+            grid-template-rows: auto 1fr;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        header { grid-column: 1 / -1; text-align: center; }
+        h1 { margin: 0 0 5px 0; font-size: 24px; font-weight: 700; color: #38bdf8; text-shadow: 0 2px 10px rgba(56,189,248,0.3); }
+        p.subtitle { margin: 0; color: #94a3b8; font-size: 14px; }
+
+        .panel { 
+            background: rgba(30, 41, 59, 0.7); 
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px; 
+            padding: 24px; 
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); 
+            backdrop-filter: blur(10px);
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden;
+        }
+
+        /* CODE PANEL */
+        .code-panel { overflow-y: auto; padding: 0; }
+        .code-container { font-family: 'Fira Code', monospace; font-size: 14px; line-height: 1.6; padding: 20px; }
+        .code-line { padding: 2px 10px; border-radius: 4px; transition: all 0.2s ease; display: flex; border-left: 3px solid transparent; }
+        .code-line.active { background: rgba(56, 189, 248, 0.15); border-left-color: #38bdf8; box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.05); }
+        .ln { color: #475569; width: 30px; display: inline-block; user-select: none; }
+        .keyword { color: #f472b6; }
+        .type { color: #38bdf8; }
+        .comment { color: #94a3b8; font-style: italic; }
+
+        /* VIZ PANEL */
+        .viz-panel { gap: 15px; overflow-y: auto; }
+        .explanation-box {
+            background: rgba(255, 255, 255, 0.05); border-left: 4px solid #a855f7;
+            padding: 16px 20px; border-radius: 8px; font-size: 15px; line-height: 1.5; min-height: 110px;
+        }
+        .explanation-box b { color: #e879f9; }
+        .explanation-box i { color: #fde047; font-style: normal; font-family: 'Fira Code', monospace; background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; }
+
+        .viz-section { background: rgba(0,0,0,0.2); border-radius: 12px; padding: 12px; }
+        .viz-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 8px; font-weight: 600; }
+
+        /* Blocks */
+        .blocks-container { display: flex; gap: 10px; min-height: 50px; align-items: center; justify-content: center; }
+        .block {
+            width: 45px; height: 45px; background: #334155; border: 2px solid #475569; border-radius: 8px;
+            display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: bold; color: #f8fafc;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .block.filled { background: #3b82f6; border-color: #60a5fa; box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); transform: translateY(-3px) scale(1.05); }
+
+        /* Used Array */
+        .used-container { display: flex; gap: 10px; justify-content: center; }
+        .used-item {
+            display: flex; flex-direction: column; align-items: center; gap: 5px; background: #1e293b; padding: 8px 12px;
+            border-radius: 8px; border: 1px solid #334155; transition: all 0.2s; width: 100px;
+        }
+        .used-item.active { border-color: #22c55e; background: rgba(34, 197, 94, 0.1); }
+        .used-label { font-family: 'Fira Code', monospace; font-size: 12px; font-weight: 600; color: #cbd5e1; }
+        .used-status { font-size: 16px; }
+
+        /* Results */
+        .results-container { display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px; }
+        .result-pill {
+            background: rgba(168, 85, 247, 0.2); border: 1px solid #a855f7; color: #e879f9; padding: 4px 10px;
+            border-radius: 20px; font-family: 'Fira Code', monospace; font-size: 13px; font-weight: 600;
+        }
+
+        /* Controls */
+        .controls { display: flex; flex-direction: column; gap: 12px; background: #1e1b4b; padding: 12px; border-radius: 12px; border: 1px solid #312e81; margin-top: auto; }
+        .slider-container { display: flex; align-items: center; gap: 15px; }
+        input[type="range"] { flex: 1; accent-color: #38bdf8; cursor: pointer; height: 6px; }
+        
+        #audioBtn {
+            background: #fde047; color: #0f172a; border: none; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;
+            cursor: pointer; transition: all 0.2s; margin-left: 5px; display:flex; align-items:center; gap: 4px; box-shadow: 0 2px 8px rgba(253, 224, 71, 0.3); text-transform: uppercase;
+        }
+        #audioBtn:hover { transform: scale(1.05); }
+        #audioBtn.off { background: #334155; color: #94a3b8; box-shadow: none; }
+
+        .buttons { display: flex; gap: 10px; justify-content: center; }
+        button.action-btn { background: #38bdf8; color: #0f172a; border: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
+        button.action-btn:hover:not(:disabled) { background: #7dd3fc; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(56,189,248,0.3); }
+        button.action-btn:disabled { background: #334155; color: #64748b; cursor: not-allowed; box-shadow: none; transform: none; }
+        #autoBtn { background: #a855f7; color: white; }
+        #autoBtn:hover:not(:disabled) { background: #c084fc; box-shadow: 0 4px 12px rgba(168,85,247,0.3); }
+        
+        /* STACK PANEL - NEW */
+        .stack-panel { overflow-y: hidden; }
+        .stack-panel h3 { margin: 0 0 5px 0; font-size: 16px; color: #e879f9; font-weight: 700; }
+        .call-stack-container { display: flex; flex-direction: column-reverse; gap: 10px; margin-top: 15px; height: 100%; overflow-y: auto; padding-bottom: 20px;}
+        .stack-frame {
+            background: #1e293b; border: 2px solid #334155; border-radius: 10px; padding: 14px;
+            display: flex; flex-direction: column; gap: 6px; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideIn 0.3s ease-out;
+            position: relative;
+        }
+        .stack-frame::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: 4px 0 0 4px; }
+        
+        .stack-frame.top { border-color: #38bdf8; background: rgba(56, 189, 248, 0.05); transform: scale(1.02); z-index: 10; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+        .stack-frame.top::before { background: #38bdf8; }
+        
+        .stack-frame.paused { border-color: #475569; opacity: 0.6; filter: grayscale(50%); transform: scale(0.95); }
+        .stack-frame.paused::before { background: #64748b; }
+        
+        .stack-frame.destroying { border-color: #ef4444; background: rgba(239,68,68,0.1); opacity: 0.5; }
+        .stack-frame.destroying::before { background: #ef4444; }
+
+        .stack-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin-bottom: 4px;}
+        .stack-level { font-weight: 700; color: #f8fafc; font-size: 14px; }
+        .stack-badge { font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600; text-transform: uppercase; background: #64748b; color: white; }
+        .stack-frame.top .stack-badge { background: #38bdf8; color: #0f172a; }
+        .stack-frame.paused .stack-badge { background: #f59e0b; color: #0f172a; }
+        .stack-frame.destroying .stack-badge { background: #ef4444; color: white; }
+
+        .stack-i { font-size: 13px; color: #cbd5e1; }
+        .stack-i b { color: #fde047; font-family: 'Fira Code', monospace; font-size: 15px; }
+        .stack-status { font-size: 13px; font-style: italic; color: #94a3b8; line-height: 1.3; }
+
+        @keyframes slideIn { 0% { opacity: 0; transform: translateY(-20px) scale(0.9); } 100% { opacity: 1; transform: translateY(0) scale(1.02); } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Backtracking Visualizer: Audio Edition</h1>
+        <p class="subtitle">Watch and *listen* to the Call Stack logic perfectly synced state-by-state.</p>
+    </header>
+
+    <div class="panel code-panel">
+        <div class="code-container" id="codeBox"></div>
+    </div>
+
+    <div class="panel viz-panel">
+        <div class="explanation-box" id="explanationText"></div>
+
+        <div class="viz-section">
+            <div class="viz-title">String Builder</div>
+            <div class="blocks-container" id="currentViz"></div>
+        </div>
+
+        <div class="viz-section">
+            <div class="viz-title">Used Array state</div>
+            <div class="used-container" id="usedViz"></div>
+        </div>
+
+        <div class="viz-section">
+            <div class="viz-title">Final Results</div>
+            <div class="results-container" id="resultsViz"></div>
+        </div>
+
+        <div class="controls">
+            <div class="slider-container">
+                <span style="font-size: 12px; font-weight:bold; color: #94a3b8; width: 70px;">Step: <span id="stepCounterDisplay">0/0</span></span>
+                <input type="range" id="stepSlider" min="0" max="0" value="0">
+                <button id="audioBtn" class="off" title="Toggle Voiceover Narrator">🔈 Audio Off</button>
+            </div>
+            <div class="buttons">
+                <button id="prevBtn" class="action-btn" disabled>◀ Prev</button>
+                <button id="nextBtn" class="action-btn">Next ▶</button>
+                <button id="autoBtn" class="action-btn">▶ Auto Play</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel stack-panel">
+        <h3>The "Inception" Stack</h3>
+        <p style="font-size: 12px; color: #94a3b8; margin-top:0;">Look here to see exactly where 'i' is saved for every dream level.</p>
+        <div class="call-stack-container" id="stackViz"></div>
+    </div>
+
+    <script>
+        const codeLines = [
+            "<span class='keyword'>private static void</span> backtrack(<span class='type'>char</span>[] chars, StringBuilder current, <span class='type'>boolean</span>[] used) {",
+            "    <span class='keyword'>if</span> (current.length() == chars.length) {",
+            "        res.add(current.toString());",
+            "        <span class='keyword'>return</span>; <span class='comment'>// Destroys top dream, wakes up the previous one!</span>",
+            "    }",
+            "",
+            "    <span class='keyword'>for</span> (<span class='type'>int</span> i = <span class='keyword'>0</span>; i < chars.length; i++) {",
+            "        <span class='keyword'>if</span> (used[i]) <span class='keyword'>continue</span>; <span class='comment'>// Skip if letter is taken</span>",
+            "",
+            "        used[i] = <span class='keyword'>true</span>;",
+            "        current.append(chars[i]);",
+            "",
+            "        <span class='comment'>// INCEPTION: Pause current dream, dive deeper!</span>",
+            "        backtrack(chars, current, used); ",
+            "",
+            "        <span class='comment'>// WAKE UP: Undo phase (happens after return)</span>",
+            "        used[i] = <span class='keyword'>false</span>;",
+            "        current.deleteCharAt(current.length() - <span class='keyword'>1</span>);",
+            "    }",
+            "}"
+        ];
+
+        const codeBox = document.getElementById('codeBox');
+        codeLines.forEach((line, index) => {
+            const div = document.createElement('div');
+            div.className = 'code-line';
+            div.id = `line-${index + 1}`;
+            div.innerHTML = `<span class="ln">${index + 1}</span>${line}`;
+            codeBox.appendChild(div);
+        });
+
+        // GENERATE STATES WITH FULL CALL STACK TRACKING
+        const states = [];
+        const chars = ['1', '2', '3'];
+        let currentArr = [];
+        let usedArr = [false, false, false];
+        let resultsArr = [];
+        let currentStack = [];
+
+        function addState(msg, activeLineId) {
+            states.push({
+                msg,
+                activeLineId,
+                current: [...currentArr],
+                used: [...usedArr],
+                results: [...resultsArr],
+                stack: JSON.parse(JSON.stringify(currentStack))
+            });
+        }
+
+        function topFrame() { return currentStack[currentStack.length - 1]; }
+
+        function simulateBacktrack(depth) {
+            currentStack.push({ level: depth, i: 'Just starting', status: 'Checking base case', state: 'top' });
+            addState(`<b>INCEPTION ALERT:</b> A brand new copy of the method was created! We call this <b>Dream ${depth}</b>. It is placed on top of our stack on the right.`, 1);
+            
+            addState(`Dream ${depth} logic checks. Is length (${currentArr.length}) equal to 3?`, 2);
+            if (currentArr.length === 3) {
+                resultsArr.push(currentArr.join(''));
+                addState(`Yes! <b>"${currentArr.join('')}"</b> is full. Adding to answers.`, 3);
+                
+                topFrame().status = 'Returning / Destroying';
+                topFrame().state = 'destroying';
+                addState(`<b>WAKING UP:</b> Hitting <i>return</i> kills Dream ${depth} forever! The paused dream sitting right underneath it on the stack will now wake up exactly where it left off.`, 4);
+                
+                currentStack.pop();
+                return;
+            }
+
+            topFrame().status = 'Loop starting';
+            addState(`Not a full word yet. Starting the loop in Dream ${depth}.`, 7);
+
+            for (let i = 0; i < 3; i++) {
+                topFrame().i = i;
+                topFrame().status = `Checking character '${chars[i]}'`;
+                addState(`Dream ${depth}'s private loop variable <b>i is now ${i}.</b> Looking at character <b>'${chars[i]}'</b>.`, 7);
+                
+                if (usedArr[i]) {
+                    topFrame().status = `'${chars[i]}' taken. Skipping.`;
+                    addState(`Look at used[${i}]. It is <b>true</b>. This letter is already in our word. We <i>continue</i> to skip to the next loop step.`, 8);
+                    continue;
+                }
+
+                usedArr[i] = true;
+                topFrame().status = `Using '${chars[i]}'`;
+                addState(`It's free! First, Dream ${depth} updates used array at index ${i} to true.`, 10);
+                
+                currentArr.push(chars[i]);
+                addState(`Second, Dream ${depth} appends <b>'${chars[i]}'</b>. String is now <b>"${currentArr.join('')}"</b>.`, 11);
+
+                // PAUSING
+                topFrame().status = `Paused at i=${i}, waiting for deeper dream.`;
+                topFrame().state = 'paused';
+                addState(`<b>INCEPTION!</b> We hit Line 14. Dream ${depth} calls backtrack() again. Dream ${depth} gets completely <b>PAUSED</b> right here at <i>i = ${i}</i> to let a deeper dream run!`, 14);
+                
+                simulateBacktrack(depth + 1);
+
+                // WAKING UP
+                topFrame().state = 'top';
+                topFrame().status = `WOKE UP at i=${i}! Running undo phase.`;
+                addState(`<b>WOKE UP!</b> The layer above finished. Dream ${depth} wakes up! Notice it remembers exactly where it was. Basically <b>i is still ${i}</b>! Time to Undo.`, 16);
+                
+                usedArr[i] = false;
+                addState(`Undo 1: Un-mark <i>used[${i}] = false</i>.`, 17);
+                
+                let popped = currentArr.pop();
+                topFrame().status = `Loop continuing to next letter`;
+                addState(`Undo 2: Remove <b>'${popped}'</b>. Now Dream ${depth}'s loop will naturally increment 'i' from ${i} to ${i+1}.`, 18);
+            }
+            
+            topFrame().status = 'Loop finished. Destroying.';
+            topFrame().state = 'destroying';
+            addState(`Dream ${depth}'s loop finished all 3 letters. The method ends naturally. Dream ${depth} will be <b>DESTROYED</b>, waking up the dream below it!`, 20);
+            
+            currentStack.pop();
+        }
+
+        // Initialize states
+        addState(`<b>Welcome to the Interactive Visualizer!</b><br>Put on your headphones. You can trace exactly how Java remembers the value of 'i' at different levels of the dream.`, 0);
+        simulateBacktrack(1);
+        addState(`<b>Complete!</b><br>The original, very first Dream finally finished its loop and destroyed itself. The Call Stack is completely empty!`, 0);
+
+        // UI & AUDIO LOGIC
+        let currentIndex = 0;
+        const slider = document.getElementById('stepSlider');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const autoBtn = document.getElementById('autoBtn');
+        const counterDisp = document.getElementById('stepCounterDisplay');
+        const audioBtn = document.getElementById('audioBtn');
+        let autoPlayInterval = null;
+        let audioEnabled = false;
+
+        slider.max = states.length - 1;
+
+        // Audio capabilities
+        const synth = window.speechSynthesis;
+        function stripHtml(html) {
+            let tmp = document.createElement("DIV");
+            tmp.innerHTML = html.replace(/<br>/g, " ");
+            return tmp.textContent || tmp.innerText || "";
+        }
+        function speakMessage(htmlMsg) {
+            if(!audioEnabled) return;
+            synth.cancel(); // Interrupt current speech
+            let text = stripHtml(htmlMsg).replace(/!=/g, 'does not equal');
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.05; // Slightly faster to keep pace
+            synth.speak(utterance);
+        }
+
+        audioBtn.addEventListener('click', () => {
+            audioEnabled = !audioEnabled;
+            if(audioEnabled) {
+                audioBtn.className = '';
+                audioBtn.innerHTML = '🔊 Audio On';
+                speakMessage(states[currentIndex].msg);
+            } else {
+                audioBtn.className = 'off';
+                audioBtn.innerHTML = '🔈 Audio Off';
+                synth.cancel();
+            }
+        });
+
+        function renderState(index) {
+            const state = states[index];
+            document.getElementById('explanationText').innerHTML = state.msg;
+            counterDisp.innerText = `${index}/${states.length - 1}`;
+            slider.value = index;
+
+            document.querySelectorAll('.code-line').forEach(el => el.classList.remove('active'));
+            if (state.activeLineId > 0 && state.activeLineId <= 20) {
+                const activeEl = document.getElementById(`line-${state.activeLineId}`);
+                if(activeEl) { activeEl.classList.add('active'); activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+            }
+
+            const curViz = document.getElementById('currentViz');
+            curViz.innerHTML = '';
+            for(let i=0; i<3; i++) {
+                const div = document.createElement('div');
+                div.className = `block ${state.current[i] ? 'filled' : ''}`;
+                div.innerText = state.current[i] || '';
+                curViz.appendChild(div);
+            }
+
+            const usedViz = document.getElementById('usedViz');
+            usedViz.innerHTML = '';
+            for(let i=0; i<3; i++) {
+                const div = document.createElement('div');
+                div.className = `used-item ${state.used[i] ? 'active' : ''}`;
+                div.innerHTML = `<span class="used-label">chars[${i}]='${chars[i]}'</span><span class="used-status">${state.used[i] ? '✅ true' : '❌ false'}</span>`;
+                usedViz.appendChild(div);
+            }
+
+            const resViz = document.getElementById('resultsViz');
+            resViz.innerHTML = '';
+            state.results.forEach((res) => {
+                const div = document.createElement('div');
+                div.className = 'result-pill';
+                div.innerText = res;
+                resViz.appendChild(div);
+            });
+
+            // STACK RENDERING
+            const stackViz = document.getElementById('stackViz');
+            stackViz.innerHTML = '';
+            if (state.stack.length === 0) {
+                stackViz.innerHTML = '<div style="color: #64748b; text-align: center; margin-top: 50px;">Stack is empty!</div>';
+            }
+            state.stack.forEach((frame) => {
+                const div = document.createElement('div');
+                let cssState = frame.state;
+                let badgeText = cssState === 'top' ? 'ACTIVE' : (cssState === 'paused' ? 'PAUSED' : 'RETURNING');
+                div.className = `stack-frame ${cssState}`;
+                div.innerHTML = `
+                    <div class="stack-header">
+                        <span class="stack-level">Dream Level ${frame.level}</span>
+                        <span class="stack-badge">${badgeText}</span>
+                    </div>
+                    <div class="stack-i">Current value of i: <b>${frame.i}</b></div>
+                    <div class="stack-status">${frame.status}</div>
+                `;
+                stackViz.appendChild(div);
+            });
+
+            // Trigger Voice!
+            speakMessage(state.msg);
+
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === states.length - 1;
+            if (index === states.length - 1 && autoPlayInterval) toggleAutoPlay();
+        }
+
+        function toggleAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = null;
+                autoBtn.innerHTML = '▶ Auto Play';
+            } else {
+                if (currentIndex === states.length - 1) currentIndex = 0;
+                autoBtn.innerHTML = '⏸ Pause';
+                // Using 3000ms to give time for audio narration
+                autoPlayInterval = setInterval(() => { if (currentIndex < states.length - 1) { renderState(++currentIndex); } else { toggleAutoPlay(); } }, 3500);
+            }
+        }
+
+        prevBtn.addEventListener('click', () => { if (currentIndex > 0) renderState(--currentIndex); });
+        nextBtn.addEventListener('click', () => { if (currentIndex < states.length - 1) renderState(++currentIndex); });
+        slider.addEventListener('input', (e) => { currentIndex = parseInt(e.target.value); renderState(currentIndex); });
+        autoBtn.addEventListener('click', toggleAutoPlay);
+
+        renderState(0);
+    </script>
+</body>
+</html>

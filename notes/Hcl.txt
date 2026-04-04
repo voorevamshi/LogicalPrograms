@@ -1,0 +1,45 @@
+
+Problem Statement
+Build a Search API for Inventory search Management System
+Backend Requirements
+Create an API which will return the Inventory matching the filter criteria provided by the user. All the parameters to Search API are optional. Filter parameters will be part of AND conditions. Return values should the inventories that match the search criteria.
+Entity Model:
+Inventory
+ID
+Name
+Category
+Subcategory
+Manufacturing Date
+Expiry Date
+Specification
+price
+stock 
+Model
+Seller
+Location
+……. Additional columns as you can assume
+
+Required APIs
+Search API to get all Inventory matching the filter
+
+Expectations
+Create a REST API
+Open API standard YAML
+Working code and demonstration
+Use proper schema design
+Proper validation of search parameters
+Proper error handling
+Clean folder structure
+ReadMe file explaining the design approach, assumption and considerations
+
+
+Bonus (optional)
+Unit tests
+Pagination
+Docker YML file
+
+
+General Information
+Tech Stack
+Java 17 with Spring or any framework of your choice
+Database: MongoDB or MySQL or H2 any Relational 

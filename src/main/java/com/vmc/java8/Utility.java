@@ -78,24 +78,24 @@ public class Utility {
 		List<Employee> employees = new ArrayList<>();
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
+			employees.add(null);
 			employees.add(new Employee(101, "Ajay", 50000.0, 'M', sdf.parse("2020-01-10"), it, Arrays.asList(
 					new Address("1st Main Street", "Hyderabad"), new Address("2nd Cross Road", "Secunderabad"))));
 
 			employees.add(new Employee(102, "Vamshi", 60000.0, 'M', sdf.parse("2019-03-25"), it,
 					Arrays.asList(new Address("5th Avenue", "Bangalore"), new Address("MG Road", "Bangalore"))));
 
-			employees.add(new Employee(103, "Hanvik", 20000.0, 'M', sdf.parse("2025-02-25"), hr,
+			employees.add(new Employee(103, "Hanvik", 20000.0, 'M', sdf.parse("2025-02-25"), null,
 					Arrays.asList(new Address("Lake View Street", "Chennai"))));
 
 			employees.add(new Employee(104, "Deepika", 70000.0, 'F', sdf.parse("2018-11-05"), finance,
 					Arrays.asList(new Address("Park Lane", "Mumbai"))));
 
 			employees.add(new Employee(105, "Sreeja", 65000.0, 'F', sdf.parse("2022-02-15"), finance,
-					Arrays.asList(new Address("Hill Road", "Pune"), new Address("FC Road", "Pune"))));
+					Arrays.asList(new Address("Hill Road", "Pune"), new Address("FC Road", "Pune"),null)));
 
 			employees.add(new Employee(105, "Shreshta", 15000.0, 'F', sdf.parse("2025-06-26"), hr,
-					Arrays.asList(new Address("Hill Road", "Pune"), new Address("2nd Main Street", "Hyderabad"))));
+					null));
 			
 			employees.add(new Employee(107, "Ramesh", 95000.0, 'M', sdf.parse("1995-01-01"), finance,
 					Arrays.asList(new Address("Hill Road", "Delhi"), new Address("3rd Main Street", "Hyderabad"))));
@@ -185,6 +185,7 @@ public class Utility {
 		employees.add(new EmpDept(103, "Hanvik", 40000.0, 'M', "2025-02-25", "hr"));
 		employees.add(new EmpDept(104, "Deepika", 70000.0, 'F', "2018-11-05", "finance"));
 		employees.add(new EmpDept(105, "Eve", 65000.0, 'F', "2022-02-15", "it"));
+
 		/*
 		 * employees.add(new EmpDept(101, "Avanthi", 50000.0, 'F', "2020-01-10", "hr"));
 		 * employees.add(new EmpDept(102, "Arun", 60000.0, 'M', "2019-03-25", "it"));

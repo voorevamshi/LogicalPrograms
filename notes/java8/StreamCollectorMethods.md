@@ -1,316 +1,322 @@
-# Java Stream and Collectors Reference
 
-### Stream – Interface
-### Collectors – Utility and final Class
-##  Stream methods 
+## Deep Dive into AWS EC2: Architecture, Lifecycle, Purchasing Models, Instance Metadata (IMDSv2), and Automated Provisioning for Enterprise Microservices
 
--   **Stream<T> mapToObj(IntFunction<R>):** Converts each element of the stream into an object of a different type.
+## 🎯 Learning Objectives
+
+-   Understand EC2 core components, virtualization layer, and decoupling of storage/compute.
     
-    _Ex: `IntStream.of(1, 2, 3).mapToObj(i -> "Number: " + i);`_
+-   Analyze EC2 purchasing strategies to balance cost, availability, and fault tolerance.
     
--   **IntStream mapToInt(ToIntFunction<T>):** Converts each element of the stream into an int value.
+-   Master instance bootstrapping using user-data and verify scripts via system logs.
     
-    _Ex: `Stream.of("1", "2", "3").mapToInt(Integer::parseInt);`_
+-   Differentiate between Instance Metadata (IMDS) and User-Data for runtime configuration.
     
--   **LongStream mapToLong(ToLongFunction<T>):** Converts each element of the stream into a long value.
-    
-    _Ex: `Stream.of("10000000000", "20000000000").mapToLong(Long::parseLong);`_
-    
--   **DoubleStream mapToDouble(ToDoubleFunction<T>):** Converts each element of the stream into a double value.
-    
-    _Ex: `Stream.of("1.5", "2.5", "3.5").mapToDouble(Double::parseDouble);`_
-    
-    _(Note: ToDoubleFunction<T> → returns a double value)_
+-   Connect securely to Linux instances using SSH/Key Pairs and troubleshoot common connection failures.
     
 
-**.toList():** Finally, the `toList()` method collects the transformed stream elements into a `List<Integer>`. This results in a list of integers representing the digits in the input string. For example, if input is "153", the resulting `intList` will be `[1, 5, 3]`.
+## 📝 Session Summary
 
-## Collectors methods 
+This session establishes the foundational compute pillar of AWS: Amazon Elastic Compute Cloud (EC2). We covered the structural building blocks of an instance (AMIs, Instance Types, EBS, and Security Groups), evaluated the seven distinct purchasing models, and demonstrated how to automate package installation via User-Data scripts. Finally, we reviewed the mechanics of Instance Metadata (`169.254.169.254`) and secure terminal connectivity via SSH.
 
-1. **`List<S> toList()`:** Collects the elements into a List.
-    *Ex: `Stream.of("A", "B", "C").collect(Collectors.toList());`*
-    
-2. **`Set<S> toSet()`:** Collects the elements into a Set (removes duplicates).
-    *Ex: `Stream.of("A", "B", "A").collect(Collectors.toSet());`*
-    
-3. **`Map<I, S> toMap()`:** Collects the elements of the stream into a Map using key and value mapping functions.
-    *Ex: `Stream.of("A", "BB", "CCC").collect(Collectors.toMap(String::length, s -> s));`*
-    
-4. **`String joining()`:** Concatenates the elements of the stream into a single String.
-    *Ex: `Stream.of("A", "B", "C").collect(Collectors.joining(", "));`*
-    
-5. **`Map<I, List<S>> groupingBy()`:** Groups the elements by a classifier; returns a Map where keys are the classifier results.
-    *Ex: `Stream.of("A", "BB", "CCC").collect(Collectors.groupingBy(String::length));`*
-    
-6. **`Map<B, List<I>> partitioningBy()`:** Partitions the elements of the stream into two groups based on a predicate.
-    *Ex: `Stream.of(1, 2, 3, 4).collect(Collectors.partitioningBy(n -> n % 2 == 0));`*
-    
-7. **`long counting()`:** Counts the number of elements in the stream.
-    *Ex: `Stream.of("A", "B", "C").collect(Collectors.counting());`*
-    
-8. **`int reducing()`:** Performs a reduction operation on the elements of the stream.
-    *Ex: `Stream.of(1, 2, 3).collect(Collectors.reducing(0, Integer::sum));`*
-    
-9. **`List<I> mapping()`:** Applies a mapping function to the elements before collecting them.
-    *Ex: `Stream.of("A", "BB", "CCC").collect(Collectors.mapping(s -> s.length(), Collectors.toList()));`*
-    
-10. **`IntSummaryStatistics summarizingInt()`:** *Ex: `Stream.of(1, 2, 3).collect(Collectors.summarizingInt(Integer::intValue)).getSum();`*
-    
-11. **`DoubleSummaryStatistics summarizingDouble()`:** *Ex: `Stream.of(1.5, 2.5, 3.5).collect(Collectors.summarizingDouble(Double::doubleValue)).getAverage();`*
-    
-12. **`LongSummaryStatistics summarizingLong()`:** *Ex: `Stream.of(1L, 2L, 3L).collect(Collectors.summarizingLong(Long::longValue)).getMax();`* *(Note: Statistics includes count, sum, min, average, max)*
-    
-13. **`averagingDouble(ToDoubleFunction mapper)`:** *Ex: `employees.stream().collect(Collectors.averagingDouble(Employee::getSalary));`*
-    
-14. **`collectingAndThen(Collector downstream, Function finisher)`:**
+## Corrected & Enhanced Notes
 
-| Argument | Type | Description |
-| :--- | :--- | :--- |
-| `downstream` | `Collector<T, A, R>` | A collector (like `toList()`, `toSet()`, etc.) |
-| `finisher` | `Function<R, RR>` | A function to **transform the collected result** |
+### 1. Amazon EC2 Core Architecture
 
-*Ex:*
-```java
-List<String> names = List.of("A", "B", "C");
-List<String> unmodifiableList = names.stream().collect(Collectors.collectingAndThen(Collectors.toList(), Collections::unmodifiableList));
+Amazon Elastic Compute Cloud (EC2) provides secure, resizable compute capacity in the cloud. In a traditional data center, spinning up a server requires hardware procurement, racking, provisioning, and hypervisor management. EC2 abstracts this into a multi-tenant or single-tenant virtualized environment managed via APIs.
 
-Optional<Employee> highestPaid = employees.stream().collect(Collectors.collectingAndThen(Collectors.maxBy(Comparator.comparing(Employee::getSalary)), Optional::get));
-```
-
-----------
-
-##  toMap method arguments 
-
-**1) toMap method with two arguments** (Throws exception on duplicate keys)
-
--   `Function<? super T, ? extends K> keyMapper`
+-   **The Decoupled Compute Model**: An EC2 instance is inherently transient by default unless backed by persistent storage. CPU and RAM are allocated from the physical host hardware, while storage is typically attached over a dedicated storage network via Amazon Elastic Block Store (EBS).
     
--   `Function<? super T, ? extends V> valueMapper`
-    
-    _Ex: `Map<Integer, String> map1  Stream.of("A", "BB", "CCC").collect(Collectors.toMap(String::length, s -> s));`_
+-   **Operating System Support**: Highly flexible, supporting Amazon Linux 2023 (AL2023), Red Hat Enterprise Linux (RHEL), Ubuntu, CentOS, SUSE Linux, Microsoft Windows Server, and macOS (running on dedicated bare-metal instances).
     
 
-**2) toMap method with Three-arguments** (Handles duplicate keys)
+### 2. Core Features Breakdown
 
--   `Function<? super T, ? extends K> keyMapper`
+-   **Instance**: The virtual computing environment itself, running on Nitro or Xen Hypervisors.
     
--   `Function<? super T, ? extends V> valueMapper`
+-   **Tags**: Key-value pairs assigned to AWS resources. They are critical for cost allocation (Cost Allocation Tags), automation scripts, and IAM attribute-based access control (ABAC).
     
--   `BinaryOperator<V> mergeFunction`
+-   **Amazon Machine Image (AMI)**: A pre-configured template containing the OS, application server, and initial configurations. You can use AWS-provided AMIs, Marketplace AMIs, or create custom AMIs (Golden Images) baked with your specific Java runtime environment (JRE) and monitoring agents.
     
-    _Ex: `Map<Integer, String> map2  Stream.of("A", "BB", "CC").collect(Collectors.toMap(String::length, s -> s, (v1, v2) -> v1 + ", " + v2));`_
+-   **Instance Type**: Categorized families optimized for distinct workloads:
     
-
-**3) toMap with Four-arguments** (Decide which Map implementation to use)
-
--   `Function<? super T, ? extends K> keyMapper`
+    -   **General Purpose (M, T)**: Balanced CPU, memory, and networking. _T-families use burstable performance credits._
+        
+    -   **Compute Optimized (C)**: High-performance processors. Ideal for batch processing, high-performance web servers, and dedicated modeling.
+        
+    -   **Memory Optimized (R, X, Z)**: Designed for fast performance for workloads that process large data sets in memory (e.g., distributed caching like Redis, or high-throughput Spring Boot applications).
+        
+    -   **Storage Optimized (I, D, H)**: High sequential read/write for local data sets (e.g., distributed databases, Kafka brokers).
+        
+    -   **Accelerated Computing (P, G, F)**: Hardware accelerators (GPUs, FPGAs) for ML and graphics rendering.
+        
+-   **Elastic Block Storage (EBS)**: Network-attached virtual hard disks providing persistent block-level storage. Unlike local instance store volumes, data on EBS survives instance stop/start operations.
     
--   `Function<? super T, ? extends V> valueMapper`
+-   **Security Groups**: Stateful, virtual firewalls operating at the **instance network interface (ENI) level** to control inbound and outbound traffic.
     
--   `BinaryOperator<V> mergeFunction`
-    
--   `Supplier<Map<K, V>> mapSupplier`
-    
-    _Ex: `Map<Integer, String> map3  Stream.of("A", "DD", "FF","CC","EEE").collect(Collectors.toMap(String::length, Function.identity(), (v1, v2) -> v1, TreeMap::new));`_
-    
-
-----------
-
-##  joining method arguments 
-
--   `Collectors.joining()`
-    
--   `Collectors.joining(", ")` --> _delimiter_
-    
--   `Collectors.joining(delimiter, prefix, suffix)`
+-   **Key Pairs**: Asymmetric cryptography used to authenticate your terminal session. AWS stores the public key inside the instance guest OS (`~/.ssh/authorized_keys`), and you maintain the private key (`.pem` or `.ppk`).
     
 
-----------
+### 3. Deep Dive: EC2 Purchasing Models
 
-##  groupingBy method arguments 
+Selecting the right purchasing model directly impacts your operational architecture and cost efficiency.
+### EC2 Purchasing Models Comparison
 
-**1) groupingBy Classifier** `groupingBy(Function<? super T, ? extends K> classifier)`
+| Feature | On-Demand | Savings Plans | Reserved Instances (RI) | Spot Instances | Dedicated Hosts | Dedicated Instances | Capacity Reservations |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Commitment** | None (Pay-by-the-second) | 1 or 3-year usage commit ($/hr) | 1 or 3-year tenure commit | None (Subject to AWS capacity) | None or 1/3 year commit | None or 1/3 year commit | None (Specify duration) |
+| **Cost Profile** | Baseline / Highest standard rate | Up to 72% savings vs On-Demand | Up to 72% savings vs On-Demand | Up to 90% savings vs On-Demand | High cost (Billed per physical host) | Premium charge over standard multi-tenant | Standard On-Demand rates apply |
+| **Flexibility** | Highest (Change size/type instantly) | High (Applies across family, region, Fargate) | Low/Medium (Convertible RIs allow shifts) | None (Instance can be reclaimed) | Low (Tied to physical hardware) | Medium (Isolated instance placement) | High (Reserve target AZ capacity) |
+| **Interruption Risk** | Zero risk of AWS reclaiming capacity | Zero risk of AWS reclaiming capacity | Zero risk of AWS reclaiming capacity | High risk (**2-minute reclamation warning**) | Zero risk of AWS reclaiming capacity | Zero risk of AWS reclaiming capacity | Zero risk of AWS reclaiming capacity |
+| **Primary Use Case** | Unpredictable, short-term dev/test workloads | Consistent, steady microservices across mixed compute | Fixed, unyielding long-term production systems | Stateless, fault-tolerant batch processors, EKS workers | Bring Your Own License (BYOL) compliance (Oracle/MS) | Strict physical tenant isolation mandates | Disaster recovery drills, high-traffic events |
+### 4. Instance Bootstrapping & User Data
 
-_Ex: `Map<Integer, List<String>> groupMap  Stream.of("A", "BB", "CCC").collect(Collectors.groupingBy(String::length));`_
+**Bootstrapping** means executing configuration scripts automatically during the very first boot lifecycle of the instance.
 
-**2) groupingBy Classifier, Downstream Collector** `groupingBy(Function<? super T, ? extends K> classifier, Collector<? super T, A, D> downstream)`
-
-_Ex: `Map<Integer, List<String>> groupMap  Stream.of("A", "BB", "CCC").collect(Collectors.groupingBy(String::length, Collectors.toList()));`_
-
-**3) groupingBy Classifier, Supplier<Map>, Downstream Collector** `groupingBy(Function<? super T, ? extends K> classifier, Supplier<M> mapFactory, Collector<? super T, A, D> downstream)`
-
-_Ex: `Map<Integer, List<String>> result  Stream.of("a", "bb", "cc").collect(Collectors.groupingBy(String::length, TreeMap::new, Collectors.toList()));`_
-
-_Common downstream collectors: `counting()`, `summingDouble()`, `averagingDouble()`, `maxBy()`, `minBy()`, `toList()`, `toSet()`_
-
-----------
-
-##  partitioningBy method arguments 
-
-**1) partitioningBy(Predicate predicate)** _Ex: `Map<Boolean, List<Integer>> partitionMap  Stream.of(1, 2, 3, 4).collect(Collectors.partitioningBy(n -> n % 2  0));`_
-
-**2) partitioningBy Predicate, Downstream Collector** _Ex: `Map<Boolean, Long> result  Stream.of(1, 2, 3, 4).collect(Collectors.partitioningBy(n -> n % 2  0, Collectors.counting()));`_
-
-----------
-
-##  reducing method arguments 
-
-1.  **reducing(BinaryOperator<T> op):** _Ex: `Optional<Integer> max  Stream.of(3, 5, 7, 2).collect(Collectors.reducing(Integer::max));`_
+-   **Execution Lifecycle**: By default, User Data scripts run **exactly once** when the instance is created. If you stop and restart the instance, the script does _not_ re-run (unless explicitly configured via cloud-init directives).
     
-2.  **reducing(T identity, BinaryOperator<T> op):** _Ex: `int reducedValue  Stream.of(1, 2, 3, 4).collect(Collectors.reducing(0, Integer::sum));`_
-    
-3.  **reducing(U identity, Function mapper, BinaryOperator<U> op):** _Ex: `double totalSalary  employees.stream().collect(Collectors.reducing(0.0, e -> e.getSalary(), Double::sum));`_
+-   **Privileges**: The script executes automatically as the `root` user. Therefore, using `sudo` within your user-data script is redundant but harmless.
     
 
-----------
+#### Corrected & Production-Ready User Data Script
 
-##  mapping method arguments 
-
-1.  **mapping(Function mapper, Collector downstream):** _Ex: `List<Integer> mappingList  Stream.of(1, 2, 3, 4).collect(Collectors.mapping(i -> i * 2, Collectors.toList()));`_
-    
-
-----------
-
-##  summarizingInt/Long/Double arguments 
-
--   `public static <T> Collector<T, ?, IntSummaryStatistics> summarizingInt(ToIntFunction<? super T> mapper)`
-    
--   `IntSummaryStatistics stats  Stream.of(1, 2, 3, 4).collect(Collectors.summarizingInt(i -> i));`
-    
--   `summarizingDouble()` is used to collect summary statistics (count, sum, min, max, average) for double values.
-    
--   _Ex: `Optional<Double> maxValue  Stream.of(1.0, 2.0, 3.0, 4.0).collect(Collectors.maxBy(Comparator.comparingDouble(i -> i)));`_
-    
-
-----------
-
-##  Collectors maxBy/minBy arguments 
-
--   `public static <T> Collector<T, ?, Optional<T>> maxBy(Comparator<? super T> comparator)`
-    
--   _Ex: `Optional<Long> minValue  Stream.of(1L, 2L, 3L, 4L).collect(Collectors.minBy(Comparator.naturalOrder()));`_
-    
--   _Ex: `Optional<Employee> highest  employees.stream().collect(Collectors.maxBy(Comparator.comparing(Employee::getSalary)));`_
-    
-
-----------
-
-##  Additional Stream methods 
-
-18.  **Optional<Double> max:** Maximum value in a stream of doubles.
-    
-    _Ex: `Stream.of(1.0, 2.0, 3.0, 4.0).max(Comparator.comparingDouble(i -> i));`_
-    
-19.  **Optional<Long> min:** Minimum value in a stream of longs.
-    
-    _Ex: `Stream.of(1L, 2L, 3L, 4L).min(Comparator.naturalOrder());`_
-    
-
--   _Ex: `Optional<Employee> highest  employees.stream().max(Comparator.comparing(Employee::getSalary));`_
-    
-
-----------
-
-##  Stream sorted method arguments 
-
--   **Stream<T> sorted():** Natural ordering (Comparable).
-    
-    _Ex: `Stream.of(3, 1, 4, 2).sorted().forEach(System.out::print); // Output: 1234`_
-    
--   **Stream<T> sorted(Comparator<? super T>):** Custom sorting.
-    
-    _Ex: `employees.stream().sorted(Comparator.comparing(Employee::getSalary)).collect(Collectors.toList());`_
-    
-
-----------
-
-##  List sort method arguments 
-
+Bash
 
 ```
-List<String> names  Arrays.asList("Charlie", "Alice", "Bob");
-names.sort(Comparator.naturalOrder()); // Natural Order
-names.sort(Comparator.comparing(Employee::getSalary)); // Custom Object sorting
+#!/bin/bash
+# Update the package manager repositories safely
+yum update -y
+
+# Install Apache Web Server (httpd)
+yum install httpd -y
+
+# Start the web server daemon
+systemctl start httpd
+
+# Enable the web server daemon to start automatically on system reboots
+systemctl enable httpd
+
+# Inject a basic diagnostic landing page
+echo "<h1>Welcome to Webserver from EC2 Bootstrapping!</h1>" > /var/www/html/index.html
 
 ```
 
-----------
+#### Troubleshooting and Logs Verification
 
-##  Optional ifPresent & ifPresentOrElse 
+If your application or server does not spin up as expected, do not guess. Inspect the boot-cycle automation engine logs inside the guest OS:
 
--   **void ifPresent(Consumer<? super T> action):** _Ex: `optionalEmp.ifPresent(emp -> System.out.println(emp.getName()));`_
+-   `/var/log/cloud-init.log`: Logs the operational stages of the `cloud-init` initialization system.
     
--   **void ifPresentOrElse(Consumer action, Runnable emptyAction):** (Java 9)
-    
-    _Ex: `name.ifPresentOrElse(n -> System.out.println("Name: " + n), () -> System.out.println("Name not available"));`_
+-   `/var/log/cloud-init-output.log`: **Critical for debugging scripts.** Captures all `stdout` and `stderr` outputs generated by your User Data execution.
     
 
-----------
+### 5. Instance Metadata Service (IMDS)
 
-##  forEach method arguments 
+Instance Metadata represents internal endpoints providing configuration data about the running instance (e.g., its public/private IP addresses, instance ID, security groups, IAM role credentials).
 
--   **Stream/Collection forEach:** `void forEach(Consumer<? super T> action)`
-    
-    _Ex: `employees.forEach(emp -> System.out.println(emp.getName()));`_
-    
--   **Map forEach:** `void forEach(BiConsumer<? super K, ? super V> action)`
-    
-    _Ex: `map.forEach((key, value) -> System.out.println("Key: " + key + ", Value: " + value));`_
-    
+> ⚠️ **Critical Security Warning**: The old method of fetching metadata via `IMDSv1` used a simple, unauthenticated HTTP GET request to the link-local IP `169.254.169.254`. This made systems vulnerable to Server-Side Request Forgery (SSRF) attacks. Modern production environments enforce **IMDSv2**, which requires a session token.
 
-----------
+#### Fetching Metadata via IMDSv2 (Secure Way)
 
-##  Other Methods 
+To query metadata under IMDSv2, you must first issue a `PUT` request to generate a cryptographically signed token, then pass that token inside an HTTP header in your subsequent `GET` request.
 
--   **skip(long n):** Skip first n elements.
-    
-    _Ex: `Stream.of("A", "B", "C", "D", "E").skip(2).forEach(System.out::println);`_
-    
--   **flatMap:** `<R> Stream<R> flatMap(Function<? super T, ? extends Stream<? extends R>> mapper)`
-### map() vs flatMap()
+Bash
 
-| Feature | map(Function<T, R>) | flatMap(Function<T, Stream<R>>) |
-| :--- | :--- | :--- |
-| **Mapping Logic** | 1-to-1 (One input -> One output) | 1-to-Many (One input -> Multiple outputs) |
-| **Output Type** | `Stream<R>` | `Stream<R>` (Flattened) |
-| **Structure** | Preserves original structure | "Flattens" nested structures |
-| **Analogy** | Like changing the color of every ball in a box. | Like opening several small boxes and pouring all contents into one big box. |
+```
+# Step 1: Generate a session token valid for 600 seconds (10 minutes)
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 600")
 
-#### Usage Examples
- 
-- **map** transforms each element into exactly one other element, **map():** `stream.map(String::toUpperCase)` — Transforms `"hello"` to `"HELLO"`
+# Step 2: Use that token to query the metadata hierarchy safely
+curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/
 
-- **flatMap** transforms each element into a stream of elements and then "flattens" those streams into a single combined stream.**flatMap():** `stream.flatMap(list -> list.stream())` — Transforms `[[1,2], [3,4]]` to `[1, 2, 3, 4]`.
+# Example: Fetching the specific unique Instance ID
+curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/instance-id
+
 ```
 
-import java.util.*;
-import java.util.stream.Collectors;
+#### Fetching User Data via Meta-Endpoint
 
-public class FlatMapExample {
-    public static void main(String[] args) {
-        List<Post> posts = Arrays.asList(
-            new Post("Java Basics", Arrays.asList("java", "programming")),
-            new Post("Stream API", Arrays.asList("java", "streams", "functional")),
-            new Post("React Intro", Arrays.asList("js", "react"))
-        );
+The user-data script passed during provisioning can also be fetched at runtime by the instance itself:
 
-        // Using flatMap to "drill down" into the tags list
-        List<String> allTags = posts.stream()
-            .flatMap(post -> post.getTags().stream()) // Converts 1 Post to a Stream of Tags
-            .map(String::toUpperCase)                // Optional: transform tags
-            .distinct()                               // Remove duplicates
-            .collect(Collectors.toList());
+Bash
 
-        System.out.println(allTags); 
-        // Output: [JAVA, PROGRAMMING, STREAMS, FUNCTIONAL, JS, REACT]
+```
+curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/user-data/
+
+```
+
+### 6. Linux Connectivity & SSH Architecture
+
+To establish an interactive terminal connection to a remote Linux instance via port 22, asymmetric key-pair cryptography is required.
+
+#### Default Built-In OS Usernames
+
+Using the incorrect username will result in a `Permission denied (publickey)` failure.
+
+-   **Amazon Linux 2 / Amazon Linux 2023**: `ec2-user`
+    
+-   **Ubuntu Linux**: `ubuntu`
+    
+-   **CentOS**: `centos`
+    
+-   **Red Hat Enterprise Linux (RHEL)**: `ec2-user` or `root`
+    
+-   **SUSE Linux**: `ec2-user` or `root`
+    
+
+#### Connecting from Modern Terminals (PowerShell / Linux Terminal / macOS)
+
+Ensure permissions on your private key file are locked down (on Unix systems, run `chmod 400 sample.pem` so that it is readable only by the owner).
+
+Bash
+
+```
+ssh -i "sample.pem" ec2-user@35.172.219.8
+
+```
+
+#### Connecting from Legacy Systems (PuTTY Workflow)
+
+-   **PuTTY** cannot native-read a `.pem` file directly.
+    
+-   **PuTTYgen** must be opened first to import the `.pem` file and convert/save it as a native `.ppk` (PuTTY Private Key) file format.
+    
+-   The `.ppk` file is then loaded into PuTTY's SSH Auth configurations (`Connection -> SSH -> Auth -> Credentials`) to establish a connection.
+    
+
+## Mistakes / Corrections Found
+
+-   **Typo in Curl Tool Commands**: The raw notes explicitly typed `Scurl http://...`. The leading `S` was a typo or terminal artifact. Corrected to standard executable command `curl`.
+    
+-   **Outdated IMDS Reference**: The original note showcased an unauthenticated request structure (`curl http://169.254.169.254/latest/meta-data/`). This is an `IMDSv1` implementation. This has been updated to the current AWS best practice of using **IMDSv2 tokens** to align with AWS Certified Developer security criteria.
+    
+-   **Typo in Commands**: The note contained `$sudo-i`. The correct syntactic command requires a space: `sudo -i` or `sudo su -`.
+    
+-   **Typo**: "power shall" was corrected to the correct tool name: **PowerShell**.
+    
+
+## Discussion Points / Clarifications Needed
+
+1.  **Stateful Security Groups vs Stateless NACLs**: A common point of confusion is how firewalls behave. Remember that if you allow inbound traffic on Port 22 in a Security Group, the outbound reply traffic is _automatically allowed_ regardless of outbound rules because Security Groups are **stateful**. Network Access Control Lists (NACLs), operating at the subnet level, are **stateless** and require explicit rules in both directions.
+    
+2.  **Instance Store vs EBS**: Remember that certain instance types come with local NVMe drive allocations called "Instance Store". Unlike EBS volumes, data on Instance Store is entirely lost if the instance is stopped or suffers a underlying hardware host failure. It is strictly temporary scratch space.
+    
+3.  **When does User Data execute?**: A common misconception is that user data executes every time an instance powers on. It only runs on the first boot. If an automation task needs to run on every boot cycle, alternative tools like crontabs, systemd services, or customized cloud-init configs must be configured.
+    
+
+## 🔥 High Probability Exam Topics Covered
+
+-   **Spot Instance Interruptions**: Managing stateless microservices using Spot Instances and understanding that AWS provides a **2-minute warning** via Amazon EventBridge and Instance Metadata before reclaiming capacity.
+    
+-   **IMDSv2 Authentication Flow**: Differentiating between IMDSv1 and IMDSv2. Expect exam items where a security audit flags exposed metadata endpoints; the solution is always enforcing token-based `IMDSv2`.
+    
+-   **User Data Debugging Path**: Recognizing that script logs are written to `/var/log/cloud-init-output.log` when an EC2 instance fails to bootstrap correctly during standard deployment testing.
+    
+
+## 🎯 Key Interview Topics Covered
+
+-   **EC2 Instance Sizing & Memory Bottlenecks**: High-throughput Spring Boot microservices heavily utilize heap space. For Java workloads, understanding that **Memory-Optimized instances (R family)** are often preferred over Compute-Optimized (C family) prevents runtime OutOfMemoryErrors (OOM).
+    
+-   **Automating CI/CD Golden Images**: Transitioning from slow runtime bootstrapping (installing JRE, updates, agents on boot) to baking custom **AMIs** using tools like HashiCorp Packer to speed up Auto Scaling scaling events.
+    
+
+## Service Comparisons
+
+### On-Demand vs Spot vs Savings Plans
+
+-   **Use On-Demand**: When deploying unproven applications, running ad-hoc profiling sessions, or executing short-term proof of concepts where workloads cannot be interrupted.
+    
+-   **Use Spot Instances**: For distributed microservice application architectures that are stateless (e.g., containerized application runners on EKS/ECS), background batch consumers pulling from SQS queues, or stateless Jenkins worker nodes.
+    
+-   **Use Savings Plans**: For core underlying stateful services, primary production APIs, and relational databases running 24/7 with zero expected downtime over a 1 to 3-year road map.
+    
+
+## Common Exam Traps
+
+-   **Trap**: A question describes an application that can easily recover from sudden compute dropouts and asks for the most cost-effective EC2 billing framework.
+    
+    -   _Distractor_: Dedicated Instances or Reserved Instances.
+        
+    -   _Correct Strategy_: **Spot Instances** always yield the highest savings (up to 90%) for fault-tolerant architectures.
+        
+-   **Trap**: An EC2 instance fails to initialize its application environment on boot, and the developer cannot find the cause using CloudTrail logs.
+    
+    -   _Distractor_: Inspecting IAM execution roles or standard CloudWatch system metrics.
+        
+    -   _Correct Strategy_: Connect to the machine and inspect `/var/log/cloud-init-output.log`. User-data stdout is internal to the operating system and is not captured by generic AWS management-plane audit trails.
+        
+
+## Potential Certification Questions
+
+1.  **A developer is provisioning an EC2 instance running Amazon Linux 2023 to host a core API layer. The security policy dictates that the metadata service must be fortified against SSRF (Server-Side Request Forgery) attacks. Which configuration choice fulfills this standard?**
+    
+    -   A. Use a custom IAM policy attached to the instance that blocks outbound communication to `169.254.169.254`.
+        
+    -   B. Configure the instance to strictly require Instance Metadata Service Version 2 (IMDSv2).
+        
+    -   C. Deploy the instance into a completely isolated private subnet with zero access to internet gateways.
+        
+    -   D. Utilize an encrypted Amazon EBS root volume using an AWS KMS customer managed key.
+        
+    -   _Correct Answer: B_
+        
+2.  **A batch-processing application executes stateless processing tasks that can be safely interrupted and restarted without data loss. What is the most cost-effective compute choice for this setup?**
+    
+    -   A. On-Demand EC2 Instances
+        
+    -   B. Dedicated Hosts
+        
+    -   C. Spot Instances
+        
+    -   D. Capacity Reservations
+        
+    -   _Correct Answer: C_
+        
+
+## Potential Interview Questions
+
+1.  **How do you troubleshoot a scenario where a fresh EC2 instance launched successfully, but your automated shell script configured inside the User Data block failed to set up your Java runtime?**
+    
+    -   _Answer_: I would SSH into the instance using its key pair and verify the execution logs. The specific logs are stored at `/var/log/cloud-init-output.log`. This file captures the standard output and error output of the user-data script during execution. I would check for broken repository links, missing dependencies, or syntax errors inside that file.
+        
+2.  **If a Spring Boot microservice running inside an EC2 instance needs to discover its own private IP address or determine the Availability Zone it is running in without using external service registries, how can it do so?**
+    
+    -   _Answer_: The application can query the local Link-Local Address endpoint `http://169.254.169.254/latest/meta-data/`. By using IMDSv2, the application would first issue a PUT request to fetch a session token and then perform a GET request to `/latest/meta-data/local-ipv4` and `/latest/meta-data/placement/availability-zone`.
+        
+
+## Session & Revision Summary
+
+Amazon EC2 provides scalable, decoupled virtual compute instances built on varying hardware families (General, Compute, Memory, Storage, Accelerated). Organizations optimize expenditure using On-Demand, Savings Plans, Reserved, Spot, or Dedicated host options. Bootstrapping automates setup at the OS layer via User Data, which logs internal output straight to `/var/log/cloud-init-output.log`. Safe data discovery is managed via secure token-based Instance Metadata (IMDSv2) at the specialized local address `169.254.169.254`.
+
+## Key Takeaways
+
+-   **IMDSv2**: Always remember the IP address **`169.254.169.254`**. For IMDSv2, it requires a two-step handshake: a `PUT` token request followed by a tokenized `GET` header request.
+    
+-   **User Data Lifecycle**: Runs **once** during the initial instance boot cycle as the root user.
+    
+-   **Default SSH Users**: `ec2-user` for Amazon Linux/RHEL, `ubuntu` for Ubuntu machines.
+    
+-   **Spot Instances**: Offers up to 90% cost reductions but can be terminated with a 2-minute notice. Excellent for stateless systems.
+    
+
+### 🛠️ Java Spring Boot Integration Context (For Reference)
+
+When writing a Spring Boot service hosted on EC2, you can use the **AWS Java SDK v2** (`software.amazon.awssdk:imds`). The SDK natively abstracts the IMDSv2 token handshake:
+
+Java
+
+```
+import software.amazon.awssdk.imds.Ec2MetadataClient;
+import software.amazon.awssdk.imds.internal.DefaultEc2MetadataClient;
+
+public class InstanceIdentityService {
+    public void printInstanceDetails() {
+        try (Ec2MetadataClient client = DefaultEc2MetadataClient.create()) {
+            String instanceId = client.get("/latest/meta-data/instance-id").asString();
+            System.out.println("Running on EC2 Instance ID: " + instanceId);
+        }
     }
 }
 
-class Post {
-    String title;
-    List<String> tags;
-    Post(String title, List<String> tags) { this.title = title; this.tags = tags; }
-    List<String> getTags() { return tags; }
-}
 ```
 
+This avoids manual curl implementation inside your Java codebase while enforcing robust IMDSv2 patterns.

@@ -139,7 +139,7 @@ Here is how the set contents look at each pass of the loop for both structures:
 | **Pass 4** | `'a'` (index `6`) | `[b, c]` | `[b, c]` |
 | **Pass 5** | `'b'` (index `7`) | `[c]` | `[c]` |
 | **Pass 6** | `'c'` (index `8`) | `[]` *(empty)* | `[]` *(empty)* |
-**Bottom Line:** If you swap in `LinkedHashSet`, your code will produce the **exact same final substring (`"abcdef"`)**, but your debug `println` statements will reliably show the characters in the exact order of the current sliding window.
+
 
 1.  **`HashSet`**: The underlying bucket array reshuffles positions based on hash codes, so the visual ordering in `hs` feels random (e.g., `[a, b, c, d, e, f]`).
     
